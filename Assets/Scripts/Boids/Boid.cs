@@ -4,6 +4,7 @@ namespace McFlockSystem
     using TMPro;
     using Unity.VisualScripting;
     using UnityEngine;
+    using UnityEngine.Assertions.Must;
     using UnityEngine.UIElements;
 
     public sealed class Boid : MonoBehaviour
@@ -13,7 +14,7 @@ namespace McFlockSystem
         [SerializeField] private bool _EnableDebug;
 
         [Header("Wall Rays Setup")]
-        [SerializeField] private int _FlockRadius;
+        [SerializeField] private float _FlockRadius;
         [SerializeField] private int _SpherePitchSize;
         [SerializeField] private int _SphereYawSize;
         [SerializeField] private float _DebugRadius;
@@ -38,16 +39,20 @@ namespace McFlockSystem
             transform.forward = _Veclocity.normalized;
         }
 
-        public void AvoidWalls(float force)
+        public void AvoidWalls(FlockArea flockArea, float force)
         {
             _HitPoints.Clear();
-            _Veclocity += AvoidWallVector();
-            _Veclocity *= _MaxVelocity;
+            _Acceleration += AvoidWallVector(flockArea) * force;
         }
 
         public void UpdateAccelaration(Vector3 accelaration)
         {
-            _Acceleration += accelaration * Time.deltaTime;
+           _Acceleration += accelaration * Time.deltaTime;
+        }
+
+        public void FinishUpdatingAcceleration()
+        {
+            _Acceleration = _Acceleration * Time.deltaTime;
         }
 
         public bool Aligment(ref Vector3 accelartion, Boid boid)
@@ -80,7 +85,7 @@ namespace McFlockSystem
                 return false;
             }
 
-            dir += dirToBoid;
+            dir = (dirToBoid - dir);
             return true;
         }
 
@@ -189,7 +194,7 @@ namespace McFlockSystem
             }
         }
 
-        private Vector3 AvoidWallVector()
+        private Vector3 AvoidWallVector(FlockArea flockArea)
         {
             Vector3 force = Vector3.zero;
             for(int i = 0; i < _AvoidanceRays.Count; ++i)
@@ -199,7 +204,24 @@ namespace McFlockSystem
                 Ray ray = new Ray(transform.position, dir.normalized);
                 if (Physics.Raycast(ray, out hit, _MaxRayLength))
                 {
-                    force += hit.normal / (hit.distance * hit.distance + 1.0f);
+                    if(hit.transform.gameObject.layer == LayerMask.NameToLayer("Boid"))
+                    {
+                        continue;
+                    }
+                    if(_EnableDebug)
+                    {
+                        _HitPoints.Add(hit.point);
+                    }
+                    force = force + ((transform.position - hit.point).normalized / (hit.distance * hit.distance + 1.0f));
+                }
+                var areaHit = flockArea.BoxRaycast(ray, _MaxRayLength);
+                if (areaHit.hit)
+                {
+                    if (_EnableDebug)
+                    {
+                        _HitPoints.Add(areaHit.point);
+                    }
+                    force = force + ((transform.position - areaHit.point).normalized / (areaHit.distance * areaHit.distance + 1.0f));
                 }
             }
             return force;

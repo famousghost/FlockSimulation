@@ -6,11 +6,12 @@ namespace McFlockSystem
     public sealed class Flock : MonoBehaviour
     {
         #region Inspector Variables
-        [SerializeField] private GameObject _FlockBox;
+        [SerializeField] private QtreeManager _QtreeManager;
+        [SerializeField] private FlockArea _FlockArea;
         [SerializeField] private float _CohesionStrength;
         [SerializeField] private float _SeparationStrength;
         [SerializeField] private float _AligmentStrength;
-        [SerializeField] private float _AvoidanceStrength;
+        [SerializeField] private float _WallAvoidanceStrength;
         #endregion Inspector Variables
 
         #region Public Variables
@@ -52,8 +53,19 @@ namespace McFlockSystem
             Instance = this;
         }
 
+        private void Start()
+        {
+            _QtreeManager.Initialize();
+        }
+
         private void Update()
         {
+            _QtreeManager.Clear();
+            _QtreeManager.Update();
+            foreach (var boid in Boids)
+            {
+                _QtreeManager.AddBoid(boid);
+            }
             foreach (var boid in Boids)
             {
                 int totalAligement = 0;
@@ -95,15 +107,14 @@ namespace McFlockSystem
                 if (totalChoesion > 0)
                 {
                     cohesionPosition /= totalChoesion;
-                    Vector3 velocity = (cohesionPosition - boid.transform.position) * _CohesionStrength;
-                    boid.UpdateAccelaration(velocity);
+                    boid.UpdateAccelaration(cohesionPosition * _CohesionStrength);
                 }
                 if(totalSeparation > 0)
                 {
                     separationDir /= totalSeparation;
                     boid.UpdateAccelaration(separationDir * _SeparationStrength);
                 }
-                boid.AvoidWalls(_AvoidanceStrength);
+                boid.AvoidWalls(_FlockArea, _WallAvoidanceStrength);
                 boid.UpdateBoid();
             }
         }
