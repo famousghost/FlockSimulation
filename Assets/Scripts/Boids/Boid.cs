@@ -22,13 +22,11 @@ namespace McFlockSystem
         [SerializeField] private float _MaxRayLength;
 
         [Header("Boid Setup")]
-        [SerializeField] private float _CollisionRadius;
         [SerializeField] private float _InitialVelocity;
         [SerializeField] private float _MaxVelocity;
         #endregion Inspector Variables
 
         #region Public Variables
-        public float CollisionRadius => _CollisionRadius;
         public Vector3 Velocity => _Veclocity;
 
         public float FlockRadius => _FlockRadius;
@@ -59,38 +57,30 @@ namespace McFlockSystem
             _Acceleration = _Acceleration * Time.deltaTime;
         }
 
-        public bool Aligment(ref Vector3 accelartion, Boid boid)
+        public bool IsClosestBoid(Boid boid)
         {
-            Vector3 velocity = Vector3.zero;
-            if((boid.transform.position - transform.position).magnitude > _FlockRadius)
+            var dir = boid.transform.position - transform.position;
+            if(Vector3.Dot(dir, dir) > (_FlockRadius * _FlockRadius))
             {
                 return false;
             }
-            velocity += boid.Velocity;
-            accelartion += velocity;
             return true;
         }
 
-        public bool Cohesion(ref Vector3 position, Boid boid)
+        public void Aligment(ref Vector3 accelartion, Boid boid)
         {
-            if ((boid.transform.position - transform.position).magnitude > _FlockRadius)
-            {
-                return false;
-            }
+            accelartion += boid.Velocity;
+        }
+
+        public void Cohesion(ref Vector3 position, Boid boid)
+        {
             position += boid.transform.position;
-            return true;
         }
 
-        public bool Separation(ref Vector3 dir, Boid boid)
+        public void Separation(ref Vector3 dir, Boid boid)
         {
             Vector3 dirToBoid = (transform.position - boid.transform.position);
-            if (dirToBoid.magnitude > _FlockRadius)
-            {
-                return false;
-            }
-
-            dir = (dirToBoid - dir);
-            return true;
+            dir += dirToBoid;
         }
 
         #endregion Public Methods

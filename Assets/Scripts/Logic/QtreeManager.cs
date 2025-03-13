@@ -196,7 +196,7 @@ namespace McFlockSystem
             float z = FindClosestToZero(boidTransform.position.z, minVert.z, maxVert.z);
             Vector3 closestPoint = new Vector3(x, y, z);
             Vector3 sphereToClosestPoint = closestPoint - boidTransform.position;
-            return  Vector3.Dot(sphereToClosestPoint, sphereToClosestPoint) <= (boid.CollisionRadius * boid.CollisionRadius);
+            return  Vector3.Dot(sphereToClosestPoint, sphereToClosestPoint) <= (boid.FlockRadius * boid.FlockRadius);
         }
 
         #endregion Public Methods

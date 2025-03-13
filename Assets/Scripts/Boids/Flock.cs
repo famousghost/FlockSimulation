@@ -73,13 +73,9 @@ namespace McFlockSystem
             foreach (var boid in Boids)
             {
                 var otherBoids = _QTreeOptimizationEnabled ? _QtreeManager.CollectClosesBoids(boid) : Boids;
-                int totalAligement = 0;
+                int totalAmount = 0;
                 Vector3 aligementAccelaration = Vector3.zero;
-
-                int totalChoesion = 0;
                 Vector3 cohesionPosition = Vector3.zero;
-
-                int totalSeparation = 0;
                 Vector3 separationDir = Vector3.zero;
                 foreach (var otherBoid in otherBoids)
                 {
@@ -87,40 +83,30 @@ namespace McFlockSystem
                     {
                         continue;
                     }
-                    
-                    if(boid.Aligment(ref aligementAccelaration, otherBoid))
+
+                    if(!boid.IsClosestBoid(otherBoid))
                     {
-                        totalAligement++;
+                        continue;
                     }
+                    totalAmount++;
+
+                    boid.Aligment(ref aligementAccelaration, otherBoid);
 
 
-                    if(boid.Cohesion(ref  cohesionPosition, otherBoid))
-                    {
-                        totalChoesion++;
-                    }
+                    boid.Cohesion(ref cohesionPosition, otherBoid);
 
-                    if(boid.Separation(ref separationDir, otherBoid))
-                    {
-                        totalSeparation++;
-                    }
-
+                    boid.Separation(ref separationDir, otherBoid);
                 }
-                if (totalAligement > 0)
+
+                if (totalAmount > 0)
                 {
-                    boid.UpdateAccelaration((aligementAccelaration / totalAligement) * _AligmentStrength);
-                }
-                if (totalChoesion > 0)
-                {
-                    cohesionPosition /= totalChoesion;
-                    boid.UpdateAccelaration(cohesionPosition * _CohesionStrength);
-                }
-                if(totalSeparation > 0)
-                {
-                    separationDir /= totalSeparation;
-                    boid.UpdateAccelaration(separationDir * _SeparationStrength);
+                    boid.UpdateAccelaration((aligementAccelaration / totalAmount) * _AligmentStrength);
+                    boid.UpdateAccelaration((cohesionPosition / totalAmount) * _CohesionStrength);
+                    boid.UpdateAccelaration((separationDir / totalAmount) * _SeparationStrength);
                 }
                 boid.AvoidWalls(_FlockArea, _WallAvoidanceStrength);
                 boid.UpdateBoid();
+
             }
         }
 
