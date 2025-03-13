@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e62656c7652b2044cab8aa6f3cf8efb5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,12 +99,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _EnableDebug: 0
   _FlockRadius: 5
-  _SpherePitchSize: 30
-  _SphereYawSize: 30
+  _SpherePitchSize: 15
+  _SphereYawSize: 15
   _DebugRadius: 0.05
   _MaxAngle: 60
   _MaxRayLength: 8
-  _CollisionRadius: 2
+  _CollisionRadius: 3
   _InitialVelocity: 12
   _MaxVelocity: 12
 --- !u!1 &3141181399474838932
@@ -168,7 +168,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e62656c7652b2044cab8aa6f3cf8efb5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
