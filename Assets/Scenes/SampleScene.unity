@@ -803,9 +803,9 @@ MonoBehaviour:
   _QTreeOptimizationEnabled: 1
   _QtreeManager: {fileID: 814126531}
   _FlockArea: {fileID: 590028304}
-  _CohesionStrength: 2
-  _SeparationStrength: 120
-  _AligmentStrength: 120
+  _CohesionStrength: 1
+  _SeparationStrength: 200
+  _AligmentStrength: 80
   _WallAvoidanceStrength: 200
   Boids: []
 --- !u!1 &579381952
@@ -2498,7 +2498,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1922266266}
   m_LocalRotation: {x: 0.2577387, y: 0.09389742, z: 0.2150725, w: 0.9372822}
-  m_LocalPosition: {x: -30.9, y: 20.9, z: -1.1}
+  m_LocalPosition: {x: -30.9, y: -13.1, z: -1.1}
   m_LocalScale: {x: 10, y: 50, z: 19.6}
   m_ConstrainProportionsScale: 0
   m_Children: []

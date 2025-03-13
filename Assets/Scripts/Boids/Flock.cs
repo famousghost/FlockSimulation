@@ -92,7 +92,6 @@ namespace McFlockSystem
 
                     boid.Aligment(ref aligementAccelaration, otherBoid);
 
-
                     boid.Cohesion(ref cohesionPosition, otherBoid);
 
                     boid.Separation(ref separationDir, otherBoid);
