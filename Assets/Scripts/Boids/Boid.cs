@@ -22,12 +22,16 @@ namespace McFlockSystem
         [SerializeField] private float _MaxRayLength;
 
         [Header("Boid Setup")]
+        [SerializeField] private float _CollisionRadius;
         [SerializeField] private float _InitialVelocity;
         [SerializeField] private float _MaxVelocity;
         #endregion Inspector Variables
 
         #region Public Variables
+        public float CollisionRadius => _CollisionRadius;
         public Vector3 Velocity => _Veclocity;
+
+        public float FlockRadius => _FlockRadius;
         #endregion Public Variables
 
         #region Public Methods

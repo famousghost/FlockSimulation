@@ -46,44 +46,6 @@ namespace McFlockSystem
             Offset = 0.25f;
         }
 
-        public void Update(Vector3 position, Vector3 size)
-        {
-            Position = position;
-            Size = size;
-            if(BackLeftDown != null)
-            {
-                BackLeftDown.Update(position + new Vector3(-size.x, -size.y, -size.z) * Offset, size * 0.5f);
-            }
-            if (BackLeftUp != null)
-            {
-                BackLeftUp.Update(position + new Vector3(-size.x, size.y, -size.z) * Offset, size * 0.5f);
-            }
-            if (BackRightDown != null)
-            {
-                BackRightDown.Update(position + new Vector3(size.x, -size.y, -size.z) * Offset, size * 0.5f);
-            }
-            if (BackRightUp != null)
-            {
-                BackRightUp.Update(position + new Vector3(size.x, size.y, -size.z) * Offset, size * 0.5f);
-            }
-            if (FrontLeftDown != null)
-            {
-                FrontLeftDown.Update(position + new Vector3(-size.x, -size.y, size.z) * Offset, size * 0.5f);
-            }
-            if (FrontLeftUp != null)
-            {
-                FrontLeftUp.Update(position + new Vector3(-size.x, size.y, -size.z) * Offset, size * 0.5f);
-            }
-            if (FrontRightDown != null)
-            {
-                FrontRightDown.Update(position + new Vector3(size.x, -size.y, size.z) * Offset, size * 0.5f);
-            }
-            if (FrontRightUp != null)
-            {
-                FrontRightUp.Update(position + new Vector3(size.x, size.y, size.z) * Offset, size * 0.5f);
-            }
-        }
-
         public void Draw()
         {
             if (BackLeftDown != null)
@@ -127,7 +89,7 @@ namespace McFlockSystem
                 return false;
             }
 
-            if(Boids.Count > MaxAmount)
+            if(Boids.Count >= MaxAmount)
             {
                 if(AddBoid(ref BackLeftDown, boid, Position + new Vector3(-Size.x, -Size.y, -Size.z) * Offset))
                 {
@@ -168,6 +130,34 @@ namespace McFlockSystem
             return true;
         }
 
+        public void CollectNeighbours(Boid boid, ref List<Boid> neighbourBoids)
+        {
+            if (!SphereCollision(boid))
+            {
+                return;
+            }
+            Collect(BackLeftDown, boid, ref neighbourBoids);
+            Collect(BackRightDown, boid, ref neighbourBoids);
+            Collect(BackLeftUp, boid, ref neighbourBoids);
+            Collect(BackRightUp, boid, ref neighbourBoids);
+            Collect(FrontLeftDown, boid, ref neighbourBoids);
+            Collect(FrontRightDown, boid, ref neighbourBoids);
+            Collect(FrontLeftUp, boid, ref neighbourBoids);
+            Collect(FrontRightUp, boid, ref neighbourBoids);
+            foreach(var otherBoid in Boids)
+            {
+                neighbourBoids.Add(otherBoid);
+            }
+        }
+
+        private void Collect(Qtree qtree, Boid boid, ref List<Boid> boids)
+        {
+            if(qtree != null)
+            {
+                qtree.CollectNeighbours(boid, ref boids);
+            }
+        }
+
         private bool AddBoid(ref Qtree qtree, Boid boid, Vector3 newPos)
         {
             if (qtree == null)
@@ -175,36 +165,6 @@ namespace McFlockSystem
                 qtree = new Qtree(newPos, Size * 0.5f, MaxAmount);
             }
             return qtree.AddBoid(boid);
-        }
-
-        public void Clear()
-        {
-            if (BackLeftDown != null)
-                BackLeftDown.Clear();
-            if (BackLeftUp != null)
-                BackLeftUp.Clear();
-            if (BackRightDown != null)
-                BackRightDown.Clear();
-            if(BackRightUp != null)
-                BackRightUp.Clear();
-            if (FrontLeftDown != null)
-                FrontLeftDown.Clear();
-            if (FrontLeftUp != null)
-                FrontLeftUp.Clear();
-            if (FrontRightDown != null)
-                FrontRightDown.Clear();
-            if (FrontRightUp != null)
-                FrontRightUp.Clear();
-            BackLeftDown = null;
-            BackLeftUp = null;
-            BackRightDown = null;
-            BackRightUp = null;
-            FrontLeftDown = null;
-            FrontLeftUp = null;
-            FrontRightDown = null;
-            FrontRightUp = null;
-            if (Boids != null)
-                Boids.Clear();
         }
 
         public Vector3 GetMinVert()
@@ -226,6 +186,19 @@ namespace McFlockSystem
                    && ((boid.position.x - maxVert.x) <= 0.0f && (boid.position.y - maxVert.y) <= 0.0f && (boid.position.z - maxVert.z) <= 0.0f);
         }
 
+        public bool SphereCollision(Boid boid)
+        {
+            Vector3 minVert = GetMinVertex();
+            Vector3 maxVert = GetMaxVertex();
+            var boidTransform = boid.transform;
+            float x = FindClosestToZero(boidTransform.position.x, minVert.x, maxVert.x);
+            float y = FindClosestToZero(boidTransform.position.y, minVert.y, maxVert.y);
+            float z = FindClosestToZero(boidTransform.position.z, minVert.z, maxVert.z);
+            Vector3 closestPoint = new Vector3(x, y, z);
+            Vector3 sphereToClosestPoint = closestPoint - boidTransform.position;
+            return  Vector3.Dot(sphereToClosestPoint, sphereToClosestPoint) <= (boid.CollisionRadius * boid.CollisionRadius);
+        }
+
         #endregion Public Methods
 
         #region Private Methods
@@ -243,12 +216,26 @@ namespace McFlockSystem
             Vector3 localScale = Size;
             return pos - localScale * 0.5f;
         }
+
+        private float FindClosestToZero(float pos, float minVert, float maxVert)
+        {
+            if (pos >= minVert && pos <= maxVert)
+            {
+                return pos;
+            }
+            if (pos <= minVert)
+            {
+                return minVert;
+            }
+            return maxVert;
+        }
         #endregion Private Methods
     }
 
     public sealed class QtreeManager : MonoBehaviour
     {
         #region Inspector Variables
+        [SerializeField] private bool _DebugEnable;
         [SerializeField] private FlockArea _FlockArea;
         [SerializeField] private Qtree _Qtree;
         [SerializeField] private int _MaxBoidsAmount;
@@ -260,9 +247,11 @@ namespace McFlockSystem
             _Qtree = new Qtree(_FlockArea.transform.position, _FlockArea.transform.localScale, _MaxBoidsAmount);
         }
 
-        public void Update()
+        public List<Boid> CollectClosesBoids(Boid boid)
         {
-            _Qtree.Update(_FlockArea.transform.position, _FlockArea.transform.localScale);
+            List<Boid> neighbours = new List<Boid>();
+            _Qtree.CollectNeighbours(boid, ref neighbours);
+            return neighbours;
         }
 
         public void AddBoid(Boid boid)
@@ -270,15 +259,15 @@ namespace McFlockSystem
             _Qtree.AddBoid(boid);
         }
 
-        public void Clear()
-        {
-            _Qtree.Clear();
-        }
         #endregion Public Methods
 
         #region Unity Methods
         private void OnDrawGizmos()
         {
+            if(!_DebugEnable)
+            {
+                return;
+            }
             Gizmos.color = Color.blue;
             Draw(_Qtree.BackLeftDown, "BackLeftDown");
             Draw(_Qtree.BackRightDown, "BackRightDown");

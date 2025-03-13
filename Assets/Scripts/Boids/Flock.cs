@@ -6,6 +6,8 @@ namespace McFlockSystem
     public sealed class Flock : MonoBehaviour
     {
         #region Inspector Variables
+        [SerializeField] private bool _QTreeOptimizationEnabled;
+
         [SerializeField] private QtreeManager _QtreeManager;
         [SerializeField] private FlockArea _FlockArea;
         [SerializeField] private float _CohesionStrength;
@@ -60,14 +62,17 @@ namespace McFlockSystem
 
         private void Update()
         {
-            _QtreeManager.Clear();
-            _QtreeManager.Update();
-            foreach (var boid in Boids)
+            if (_QTreeOptimizationEnabled)
             {
-                _QtreeManager.AddBoid(boid);
+                _QtreeManager.Initialize();
+                foreach (var boid in Boids)
+                {
+                    _QtreeManager.AddBoid(boid);
+                }
             }
             foreach (var boid in Boids)
             {
+                var otherBoids = _QTreeOptimizationEnabled ? _QtreeManager.CollectClosesBoids(boid) : Boids;
                 int totalAligement = 0;
                 Vector3 aligementAccelaration = Vector3.zero;
 
@@ -76,25 +81,25 @@ namespace McFlockSystem
 
                 int totalSeparation = 0;
                 Vector3 separationDir = Vector3.zero;
-                foreach (var otherBoids in Boids)
+                foreach (var otherBoid in otherBoids)
                 {
-                    if (boid == otherBoids)
+                    if (boid == otherBoid)
                     {
                         continue;
                     }
                     
-                    if(boid.Aligment(ref aligementAccelaration, otherBoids))
+                    if(boid.Aligment(ref aligementAccelaration, otherBoid))
                     {
                         totalAligement++;
                     }
 
 
-                    if(boid.Cohesion(ref  cohesionPosition, otherBoids))
+                    if(boid.Cohesion(ref  cohesionPosition, otherBoid))
                     {
                         totalChoesion++;
                     }
 
-                    if(boid.Separation(ref separationDir, otherBoids))
+                    if(boid.Separation(ref separationDir, otherBoid))
                     {
                         totalSeparation++;
                     }
