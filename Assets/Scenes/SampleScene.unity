@@ -787,7 +787,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Prefab: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
   _SpawnArea: {fileID: 590028304}
-  _BoidsCount: 300
+  _BoidsCount: 400
 --- !u!114 &479182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1115,8 +1115,9 @@ MonoBehaviour:
     Size: {x: 0, y: 0, z: 0}
     MaxAmount: 0
     Offset: 0
+    IsSubdivided: 0
     Boids: []
-  _MaxBoidsAmount: 6
+  _MaxBoidsAmount: 4
 --- !u!4 &814126532
 Transform:
   m_ObjectHideFlags: 0

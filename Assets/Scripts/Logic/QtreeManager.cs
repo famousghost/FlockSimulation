@@ -14,6 +14,7 @@ namespace McFlockSystem
         public Vector3 Size;
         public int MaxAmount;
         public float Offset;
+        public bool IsSubdivided;
 
         //Recursive QTree
         [SerializeField] public Qtree BackLeftDown;
@@ -31,6 +32,7 @@ namespace McFlockSystem
         #region Public Methods
         public Qtree(Vector3 position, Vector3 size, int maxAmount)
         {
+            IsSubdivided = false;
             Boids = new List<Boid>();
             Position = position;
             Size = size;
@@ -89,41 +91,21 @@ namespace McFlockSystem
                 return false;
             }
 
-            if(Boids.Count >= MaxAmount)
+            if (IsSubdivided || Boids.Count >= MaxAmount)
             {
-                if(AddBoid(ref BackLeftDown, boid, Position + new Vector3(-Size.x, -Size.y, -Size.z) * Offset))
+                if (!IsSubdivided)
                 {
-                    return true;
+                    foreach (var otherBoid in Boids)
+                    {
+                        if (!Subdivide(otherBoid))
+                        {
+                            //Something went wrong
+                            continue;
+                        }
+                    }
                 }
-                if(AddBoid(ref BackLeftUp, boid, Position + new Vector3(-Size.x, Size.y, -Size.z) * Offset))
-                {
-                    return true;
-                }
-                if(AddBoid(ref BackRightDown, boid, Position + new Vector3(Size.x, -Size.y, -Size.z) * Offset))
-                {
-                    return true;
-                }
-                if(AddBoid(ref BackRightUp, boid, Position + new Vector3(Size.x, Size.y, -Size.z) * Offset))
-                {
-                    return true;
-                }
-                if(AddBoid(ref FrontLeftDown, boid, Position + new Vector3(-Size.x, -Size.y, Size.z) * Offset))
-                {
-                    return true;
-                }
-                if(AddBoid(ref FrontLeftUp, boid, Position + new Vector3(-Size.x, Size.y, Size.z) * Offset))
-                {
-                    return true;
-                }
-                if(AddBoid(ref FrontRightDown, boid, Position + new Vector3(Size.x, -Size.y, Size.z) * Offset))
-                {
-                    return true;
-                }
-                if(AddBoid(ref FrontRightUp, boid, Position + new Vector3(Size.x, Size.y, Size.z) * Offset))
-                {
-                    return true;
-                }
-                return false;
+                IsSubdivided = true;
+                return Subdivide(boid);
             }
 
             Boids.Add(boid);
@@ -144,6 +126,10 @@ namespace McFlockSystem
             Collect(FrontRightDown, boid, ref neighbourBoids);
             Collect(FrontLeftUp, boid, ref neighbourBoids);
             Collect(FrontRightUp, boid, ref neighbourBoids);
+            if(IsSubdivided)
+            {
+                return;
+            }
             foreach(var otherBoid in Boids)
             {
                 neighbourBoids.Add(otherBoid);
@@ -215,6 +201,43 @@ namespace McFlockSystem
             Vector3 pos = Position;
             Vector3 localScale = Size;
             return pos - localScale * 0.5f;
+        }
+
+        private bool Subdivide(Boid boid)
+        {
+            if (AddBoid(ref BackLeftDown, boid, Position + new Vector3(-Size.x, -Size.y, -Size.z) * Offset))
+            {
+                return true;
+            }
+            if (AddBoid(ref BackLeftUp, boid, Position + new Vector3(-Size.x, Size.y, -Size.z) * Offset))
+            {
+                return true;
+            }
+            if (AddBoid(ref BackRightDown, boid, Position + new Vector3(Size.x, -Size.y, -Size.z) * Offset))
+            {
+                return true;
+            }
+            if (AddBoid(ref BackRightUp, boid, Position + new Vector3(Size.x, Size.y, -Size.z) * Offset))
+            {
+                return true;
+            }
+            if (AddBoid(ref FrontLeftDown, boid, Position + new Vector3(-Size.x, -Size.y, Size.z) * Offset))
+            {
+                return true;
+            }
+            if (AddBoid(ref FrontLeftUp, boid, Position + new Vector3(-Size.x, Size.y, Size.z) * Offset))
+            {
+                return true;
+            }
+            if (AddBoid(ref FrontRightDown, boid, Position + new Vector3(Size.x, -Size.y, Size.z) * Offset))
+            {
+                return true;
+            }
+            if (AddBoid(ref FrontRightUp, boid, Position + new Vector3(Size.x, Size.y, Size.z) * Offset))
+            {
+                return true;
+            }
+            return false;
         }
 
         private float FindClosestToZero(float pos, float minVert, float maxVert)

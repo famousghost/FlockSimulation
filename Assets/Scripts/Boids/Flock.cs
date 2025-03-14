@@ -73,6 +73,8 @@ namespace McFlockSystem
             foreach (var boid in Boids)
             {
                 var otherBoids = _QTreeOptimizationEnabled ? _QtreeManager.CollectClosesBoids(boid) : Boids;
+                //Show how many calculations needed
+                //Debug.Log($"otherboids size = {otherBoids.Count}");
                 int totalAmount = 0;
                 Vector3 aligementAccelaration = Vector3.zero;
                 Vector3 cohesionPosition = Vector3.zero;
