@@ -787,7 +787,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Prefab: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
   _SpawnArea: {fileID: 590028304}
-  _BoidsCount: 400
+  _BoidsCount: 300
 --- !u!114 &479182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -803,10 +803,10 @@ MonoBehaviour:
   _QTreeOptimizationEnabled: 1
   _QtreeManager: {fileID: 814126531}
   _FlockArea: {fileID: 590028304}
-  _CohesionStrength: 1
+  _CohesionStrength: 3
   _SeparationStrength: 200
-  _AligmentStrength: 80
-  _WallAvoidanceStrength: 200
+  _AligmentStrength: 120
+  _WallAvoidanceStrength: 250
   Boids: []
 --- !u!1 &579381952
 GameObject:
@@ -1111,10 +1111,10 @@ MonoBehaviour:
   _DebugEnable: 1
   _FlockArea: {fileID: 590028304}
   _Qtree:
-    Position: {x: 0, y: 0, z: 0}
-    Size: {x: 0, y: 0, z: 0}
-    MaxAmount: 0
-    Offset: 0
+    Position: {x: -30, y: 0, z: 0}
+    Size: {x: 120, y: 80, z: 120}
+    MaxAmount: 4
+    Offset: 0.25
     IsSubdivided: 0
     Boids: []
   _MaxBoidsAmount: 4

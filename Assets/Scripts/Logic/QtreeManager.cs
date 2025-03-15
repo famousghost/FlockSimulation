@@ -99,10 +99,11 @@ namespace McFlockSystem
                     {
                         if (!Subdivide(otherBoid))
                         {
-                            //Something went wrong
                             continue;
                         }
                     }
+                    //Can be deleted
+                    Boids.Clear();
                 }
                 IsSubdivided = true;
                 return Subdivide(boid);

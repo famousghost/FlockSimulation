@@ -7,6 +7,7 @@ namespace McFlockSystem
     {
         #region Inspector Variables
         [SerializeField] private bool _QTreeOptimizationEnabled;
+        [SerializeField] private bool _EnableBoidCheckVisualization;
 
         [SerializeField] private QtreeManager _QtreeManager;
         [SerializeField] private FlockArea _FlockArea;
@@ -73,8 +74,7 @@ namespace McFlockSystem
             foreach (var boid in Boids)
             {
                 var otherBoids = _QTreeOptimizationEnabled ? _QtreeManager.CollectClosesBoids(boid) : Boids;
-                //Show how many calculations needed
-                //Debug.Log($"otherboids size = {otherBoids.Count}");
+                //Debug.Log($"[Update] otherBoids.count = {otherBoids.Count}");
                 int totalAmount = 0;
                 Vector3 aligementAccelaration = Vector3.zero;
                 Vector3 cohesionPosition = Vector3.zero;
@@ -108,6 +108,24 @@ namespace McFlockSystem
                 boid.AvoidWalls(_FlockArea, _WallAvoidanceStrength);
                 boid.UpdateBoid();
 
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            if(!_EnableBoidCheckVisualization)
+            {
+                return;
+            }
+            foreach(var boid in Boids)
+            {
+                var otherBoids = _QTreeOptimizationEnabled ? _QtreeManager.CollectClosesBoids(boid) : Boids;
+                //Debug.Log($"[OnDrawGizmos] otherBoids.count = {otherBoids.Count}");
+                foreach(var otherBoid in otherBoids)
+                {
+                    Gizmos.color = Color.red;
+                    Gizmos.DrawLine(boid.transform.position, otherBoid.transform.position);
+                }
             }
         }
 
