@@ -801,13 +801,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _QTreeOptimizationEnabled: 1
+  _EnableBoidCheckVisualization: 0
   _QtreeManager: {fileID: 814126531}
   _FlockArea: {fileID: 590028304}
-  _CohesionStrength: 3
+  _CohesionStrength: 10
   _SeparationStrength: 200
-  _AligmentStrength: 120
-  _WallAvoidanceStrength: 250
+  _AligmentStrength: 1000
+  _WallAvoidanceStrength: 500
+  _FlockSimulationComputeShader: {fileID: 0}
+  _SpherePitchSize: 0
+  _SphereYawSize: 0
+  _MaxAngle: 0
   Boids: []
+  Obstacles: []
 --- !u!1 &579381952
 GameObject:
   m_ObjectHideFlags: 0

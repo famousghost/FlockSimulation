@@ -39,6 +39,7 @@ namespace McFlockSystem
             _Veclocity = (_Veclocity.magnitude > _MaxVelocity) ? (_Veclocity.normalized * _MaxVelocity) : _Veclocity;
             transform.position += _Veclocity * Time.deltaTime;
             transform.forward = _Veclocity.normalized;
+            _Acceleration = Vector3.zero;
         }
 
         public void AvoidWalls(FlockArea flockArea, float force)

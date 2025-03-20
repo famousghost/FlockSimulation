@@ -1,0 +1,37 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel FlockSimulation
+
+struct Boid
+{
+    float4 worldPosition;
+    float4 worldSize;
+    float4x4 localToWorldMatrix;
+    float4x4 worldToLocalMatrix;
+};
+
+struct Obstacles
+{
+    float4 worldPosition; //x - posX, y - posY, z - posZ, w type
+    float4 worldSize;
+};
+
+struct FlockForces
+{
+    float cohesion;
+    float alignment;
+    float separation;
+    float wallAvoidanceStrength;
+};
+
+RWStructuredBuffer<Boid> _Boids;
+RWStructuredBuffer<Obstacles> _Obstacles;
+RWStructuredBuffer<float4> _AvoidancePoints;
+
+ConstantBuffer<FlockForces> _FlockForces;
+
+[numthreads(8,1,1)]
+void FlockSimulation (uint3 id : SV_DispatchThreadID)
+{
+    
+
+}

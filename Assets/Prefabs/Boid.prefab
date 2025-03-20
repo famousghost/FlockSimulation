@@ -103,7 +103,7 @@ MonoBehaviour:
   _SphereYawSize: 15
   _DebugRadius: 0.05
   _MaxAngle: 65
-  _MaxRayLength: 8
+  _MaxRayLength: 20
   _InitialVelocity: 12
   _MaxVelocity: 12
 --- !u!1 &3141181399474838932
