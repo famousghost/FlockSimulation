@@ -3,8 +3,10 @@
 
 struct Boid
 {
-    float4 worldPosition;
-    float4 worldSize;
+    float4 worldPosition; // pos x, y, z | radius w
+    float4 worldSize; // size x, y, z | rayLenght w
+    float4 velocity;
+    float4 acceleration;
     float4x4 localToWorldMatrix;
     float4x4 worldToLocalMatrix;
 };
@@ -15,23 +17,69 @@ struct Obstacles
     float4 worldSize;
 };
 
-struct FlockForces
+RWStructuredBuffer<Boid> _Boids;
+StructuredBuffer<Obstacles> _Obstacles;
+StructuredBuffer<float4> _AvoidancePoints;
+int _BoidsAmount;
+int _ObstacleAmount;
+int _AvoidancePointAmount;
+float _MaxAngle;
+
+cbuffer FlockForces
 {
-    float cohesion;
-    float alignment;
-    float separation;
-    float wallAvoidanceStrength;
+    float CohesionStrength;
+    float AlignmentStrength;
+    float SeparationStrength;
+    float WallAvoidanceStrength;
 };
 
-RWStructuredBuffer<Boid> _Boids;
-RWStructuredBuffer<Obstacles> _Obstacles;
-RWStructuredBuffer<float4> _AvoidancePoints;
+bool BoxRaycast(Boid boid, float4 avoidancePoint, Obstaclesobstacle)
+{
+    float3 dir = normalize(avoidancePoint - mul(boid.worldToLocalMatrix, boid.worldPosition));
+    if (acos(dot(dir, mul(boid.worldToLocalMatrix, boid.forward))) > radians(_MaxAngle))
+    {
+        return false;
+    }
+}
 
-ConstantBuffer<FlockForces> _FlockForces;
+float3 WallAvoidance(uint id)
+{
+    float3 force = float3(0.0f, 0.0f, 0.0f);
+    for (int i = 0; i < _AvoidancePointAmount; ++i)
+    {
+        for (int j = 0; j < _ObstacleAmount; ++j)
+        {
+            bool areaHit = BoxRaycast(_Boids[id], _AvoidancePoints[i], _Obstacles[j]);
+            if (areaHit.hit)
+            {
+            
+            }
+        }
+    }
+    return force;
+}
+
+float3 CohesionRule(uint id)
+{
+    return float3(0.0f, 0.0f, 0.0f);
+}
+
+float3 SepeationRule(uint id)
+{
+    return float3(0.0f, 0.0f, 0.0f);
+}
+
+float3 AlignmentRule(uint id)
+{
+    return float3(0.0f, 0.0f, 0.0f);
+}
 
 [numthreads(8,1,1)]
-void FlockSimulation (uint3 id : SV_DispatchThreadID)
+void FlockSimulation (uint id : SV_DispatchThreadID)
 {
-    
-
+    float3 acceleration = CohesionRule(id);
+    acceleration += SepeationRule(id);
+    acceleration += AlignmentRule(id);
+    acceleration += WallAvoidance(id);
+    _Boids[id].acceleration.xyz = _Boids[id].acceleration.xyz + acceleration;
 }

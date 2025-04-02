@@ -23,6 +23,12 @@ namespace McFlockSystem
         #endregion Public Methods
 
         #region Unity Methods
+
+        private void Update()
+        {
+            Position = transform.position;
+            Size = transform.localScale;
+        }
         private void OnEnable()
         {
             if(Flock.Instance == null)

@@ -3,6 +3,7 @@ namespace McFlockSystem
     using System.Collections.Generic;
     using TMPro;
     using Unity.VisualScripting;
+    using UnityEditorInternal;
     using UnityEngine;
     using UnityEngine.Assertions.Must;
     using UnityEngine.UIElements;
@@ -27,19 +28,22 @@ namespace McFlockSystem
         #endregion Inspector Variables
 
         #region Public Variables
+        public Vector3 Acceleration => _Acceleration;
+
         public Vector3 Velocity => _Veclocity;
 
         public float FlockRadius => _FlockRadius;
+
+        public float MaxRayLength => _MaxRayLength;
         #endregion Public Variables
 
         #region Public Methods
         public void UpdateBoid()
         {
             _Veclocity += _Acceleration * Time.deltaTime;
-            _Veclocity = (_Veclocity.magnitude > _MaxVelocity) ? (_Veclocity.normalized * _MaxVelocity) : _Veclocity;
+            _Veclocity = _Veclocity.normalized * _MaxVelocity;
             transform.position += _Veclocity * Time.deltaTime;
             transform.forward = _Veclocity.normalized;
-            _Acceleration = Vector3.zero;
         }
 
         public void AvoidWalls(FlockArea flockArea, float force)
@@ -50,12 +54,7 @@ namespace McFlockSystem
 
         public void UpdateAccelaration(Vector3 accelaration)
         {
-           _Acceleration += accelaration * Time.deltaTime;
-        }
-
-        public void FinishUpdatingAcceleration()
-        {
-            _Acceleration = _Acceleration * Time.deltaTime;
+            _Acceleration += accelaration;
         }
 
         public bool IsClosestBoid(Boid boid)
