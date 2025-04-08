@@ -787,7 +787,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &479182330
 MonoBehaviour:
@@ -820,14 +820,15 @@ MonoBehaviour:
   _EnableBoidCheckVisualization: 0
   _QtreeManager: {fileID: 814126531}
   _FlockArea: {fileID: 590028304}
-  _CohesionStrength: 15
-  _SeparationStrength: 25
-  _AligmentStrength: 20
+  _CohesionStrength: 5
+  _SeparationStrength: 20
+  _AligmentStrength: 40
   _WallAvoidanceStrength: 800
   _FlockSimulationComputeShader: {fileID: 7200000, guid: f0f7f8cee349c8c4da0507621bee17d1, type: 3}
-  _SpherePitchSize: 15
-  _SphereYawSize: 15
+  _SpherePitchSize: 20
+  _SphereYawSize: 20
   _MaxAngle: 80
+  _MaxRayLength: 15
   _CalculationTypes: 0
   Boids: []
   Obstacles: []
@@ -892,6 +893,7 @@ GameObject:
   m_Component:
   - component: {fileID: 590028303}
   - component: {fileID: 590028304}
+  - component: {fileID: 590028305}
   m_Layer: 0
   m_Name: FlockArea
   m_TagString: Untagged
@@ -927,6 +929,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _MaxSize: 0.25
+--- !u!114 &590028305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590028300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Position: {x: 0, y: 0, z: 0, w: 0}
+  Size: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2358,7 +2375,7 @@ Transform:
   - {fileID: 221168207}
   - {fileID: 1138943005}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1761729698
 GameObject:

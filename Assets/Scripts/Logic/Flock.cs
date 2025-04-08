@@ -2,6 +2,7 @@ namespace McFlockSystem
 {
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
+    using Unity.VisualScripting;
     using UnityEngine;
 
     public enum CalculationTypes
@@ -32,6 +33,7 @@ namespace McFlockSystem
         [SerializeField] private int _SpherePitchSize;
         [SerializeField] private int _SphereYawSize;
         [SerializeField] private float _MaxAngle;
+        [SerializeField] private float _MaxRayLength;
 
         [Header("Configuration")]
         [SerializeField] private CalculationTypes _CalculationTypes;
@@ -106,7 +108,7 @@ namespace McFlockSystem
 
         private void Start()
         {
-            _FlockShaderKernelIndex = _FlockSimulationComputeShader.FindKernel("FlockSimulation");
+            _FlockShaderKernelIndex = _FlockSimulationComputeShader.FindKernel(_FlockShaderKernelName);
             InitializeBuffers();
         }
 
@@ -125,6 +127,21 @@ namespace McFlockSystem
             {
                 FlockSimulationGPU();
             }
+        }
+
+        private void OnDestroy()
+        {
+            //TODO: Delete unnecessary buffers
+            /*
+            _BoidsBuffer.Dispose();
+            _BoidsBuffer = null;
+            _ForcesBuffer.Dispose();
+            _ForcesBuffer = null;
+            _ObstaclesBuffer.Dispose();
+            _ObstaclesBuffer = null;
+            _AvoidancePointsBuffer.Dispose();
+            _AvoidancePointsBuffer = null;
+            */
         }
 
         private void OnDrawGizmos()
@@ -161,12 +178,14 @@ namespace McFlockSystem
         private readonly int _BoidsBufferId = Shader.PropertyToID("_Boids");
         private readonly int _ObstalceBufferId = Shader.PropertyToID("_Obstacles");
         private readonly int _AvoidancePointsBufferId = Shader.PropertyToID("_AvoidancePoints");
-        private readonly int _FlockForcesConstantBufferId = Shader.PropertyToID("FlockForces");
+        private readonly int _FlockForcesConstantBufferId = Shader.PropertyToID("FlockData");
         private readonly int _BoidsAmountId = Shader.PropertyToID("_BoidsAmount");
         private readonly int _ObstacleAmountId = Shader.PropertyToID("_ObstacleAmount");
         private readonly int _AvoidancePointsAmountId = Shader.PropertyToID("_AvoidancePointAmount");
 
         private readonly string _FlockShaderKernelName = "FlockSimulation";
+
+        private BoidsStructureBuffer[] _BoidsReadBufferData;
         #endregion Private Variables
 
         #region Private Methods
@@ -231,6 +250,18 @@ namespace McFlockSystem
             uint kernelX = 0u;
             _FlockSimulationComputeShader.GetKernelThreadGroupSizes(_FlockShaderKernelIndex, out kernelX, out _, out _);
             _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)kernelX, 1, 1);
+            _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
+            _BoidsBuffer.GetData(_BoidsReadBufferData);
+
+            int i = 0;
+            foreach(var boid in Boids)
+            {
+                var acceleration = _BoidsReadBufferData[i].Acceleration;
+                boid.UpdateAccelaration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
+                boid.UpdateBoid();
+                ++i;
+            }
+            
         }
 
         private void PrepareBoidsBuffer()
@@ -240,10 +271,10 @@ namespace McFlockSystem
             foreach(var boid in Boids)
             {
                 boidsStructBuffers.Add(new BoidsStructureBuffer(
-                    boid.transform.position,
-                    boid.transform.forward,
-                    new Vector4(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, boid.FlockRadius),
-                    new Vector4(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z),
+                    new Vector4(boid.transform.position.x, boid.transform.position.y, boid.transform.position.z, boid.FlockRadius),
+                    new Vector4(boid.transform.forward.x, boid.transform.forward.y, boid.transform.forward.z, 1.0f),
+                    new Vector4(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f),
+                    new Vector4(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f),
                     boid.transform.localToWorldMatrix,
                     boid.transform.worldToLocalMatrix)) ;
             }
@@ -276,10 +307,10 @@ namespace McFlockSystem
             _AvoidancePointsBuffer.SetData(_AvoidancePoints.ToArray());
         }
 
-        private void PrepareForceBuffer()
+        private void PrepareFlockDataBuffer()
         {
-            _ForcesBuffer = new ComputeBuffer(4, sizeof(float), ComputeBufferType.Constant);
-            Vector4[] forceData = { new Vector4(_CohesionStrength, _SeparationStrength, _AligmentStrength, _WallAvoidanceStrength) };
+            _ForcesBuffer = new ComputeBuffer(6, sizeof(float), ComputeBufferType.Constant);
+            float[] forceData = { _CohesionStrength, _SeparationStrength, _AligmentStrength, _WallAvoidanceStrength, _MaxAngle, _MaxRayLength};
             _ForcesBuffer.SetData(forceData);
         }
 
@@ -295,7 +326,7 @@ namespace McFlockSystem
                     float y = Mathf.Sin(pitchAngle * 2.0f * Mathf.PI);
                     float z = Mathf.Sin(yawAngle * 2.0f * Mathf.PI) * Mathf.Cos(pitchAngle * 2.0f * Mathf.PI);
                     Vector3 point = new Vector3(x, y, z);
-                    _AvoidancePoints.Add(point);
+                    _AvoidancePoints.Add(new Vector4(point.x, point.y, point.z, 1.0f));
                 }
             }
         }
@@ -303,10 +334,10 @@ namespace McFlockSystem
         private void InitializeBuffers()
         {
             PrepareAvoidancePointsBuffer();
-            PrepareForceBuffer();
+            PrepareFlockDataBuffer();
             _FlockSimulationComputeShader.SetInt(_AvoidancePointsAmountId, _AvoidancePoints.Count);
             _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _AvoidancePointsBufferId, _AvoidancePointsBuffer);
-            _FlockSimulationComputeShader.SetConstantBuffer(_FlockForcesConstantBufferId, _ForcesBuffer, 0, sizeof(float) * 4);
+            _FlockSimulationComputeShader.SetConstantBuffer(_FlockForcesConstantBufferId, _ForcesBuffer, 0, sizeof(float) * 6);
         }
 
         #endregion Private Methods

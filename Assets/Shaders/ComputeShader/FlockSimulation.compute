@@ -4,7 +4,7 @@
 struct Boid
 {
     float4 worldPosition; // pos x, y, z | radius w
-    float4 worldSize; // size x, y, z | rayLenght w
+    float4 forward; // dir x, y, z | rayLenght w
     float4 velocity;
     float4 acceleration;
     float4x4 localToWorldMatrix;
@@ -17,29 +17,98 @@ struct Obstacles
     float4 worldSize;
 };
 
+struct AABB
+{
+    float3 minVert;
+    float3 maxVert;
+};
+
 RWStructuredBuffer<Boid> _Boids;
 StructuredBuffer<Obstacles> _Obstacles;
 StructuredBuffer<float4> _AvoidancePoints;
 int _BoidsAmount;
 int _ObstacleAmount;
 int _AvoidancePointAmount;
-float _MaxAngle;
 
-cbuffer FlockForces
+cbuffer FlockData
 {
     float CohesionStrength;
     float AlignmentStrength;
     float SeparationStrength;
     float WallAvoidanceStrength;
+    float MaxAngle;
+    float MaxLength;
 };
 
-bool BoxRaycast(Boid boid, float4 avoidancePoint, Obstaclesobstacle)
+struct BoxHit
 {
-    float3 dir = normalize(avoidancePoint - mul(boid.worldToLocalMatrix, boid.worldPosition));
-    if (acos(dot(dir, mul(boid.worldToLocalMatrix, boid.forward))) > radians(_MaxAngle))
+    float3 hitPoint;
+    float depth;
+    bool hit;
+};
+
+AABB CretaeAABBFromBox(Obstacles obstacle)
+{
+    AABB aabb;
+    aabb.minVert = obstacle.worldPosition.xyz - obstacle.worldSize.xyz * 0.5f;
+    aabb.maxVert = obstacle.worldPosition.xyz + obstacle.worldSize.xyz * 0.5f;
+    return aabb;
+}
+
+BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
+{
+    BoxHit boxHit;
+    boxHit.hit = false;
+    boxHit.hitPoint = float3(0.0f, 0.0f, 0.0f);
+    boxHit.depth = 0.0f;
+    float3 dir = normalize(avoidancePoint.xyz
+                           - mul(boid.worldToLocalMatrix, float4(boid.worldPosition.x, boid.worldPosition.y, boid.worldPosition.z, 1.0f)).xyz);
+    if (acos(dot(dir, mul(boid.worldToLocalMatrix, boid.forward).xyz)) > radians(MaxAngle))
     {
-        return false;
+        return boxHit;
     }
+    AABB aabb = CretaeAABBFromBox(obstacle);
+    float3 worldDir = normalize(mul(boid.localToWorldMatrix, float4(dir.x, dir.y, dir.z, 1.0f)).xyz);
+    float3 pMin = (aabb.minVert - boid.worldPosition.xyz) / worldDir;
+    float3 pMax = (aabb.maxVert - boid.worldPosition.xyz) / worldDir;
+
+    float3 tMin = float3(min(pMin.x, pMax.x), min(pMin.y, pMax.y), min(pMin.z, pMax.z));
+    float3 tMax = float3(max(pMin.x, pMax.x), max(pMin.y, pMax.y), max(pMin.z, pMax.z));
+
+    float maxMin = max(max(tMin.x, tMin.y), tMin.z); 
+
+    float minMax = min(min(tMax.x, tMax.y), tMax.z);
+
+    if (minMax <= 0.0f)
+    { 
+        return boxHit;
+    }
+
+    if (minMax <= maxMin)
+    {
+        return boxHit;
+    }
+    if (maxMin <= 0.0f)
+    {
+        if (minMax > MaxLength)
+        {
+            return boxHit;
+        }
+        boxHit.hit = true;
+        boxHit.hitPoint = boid.worldPosition.xyz + worldDir * minMax;
+        boxHit.depth = minMax;
+        return boxHit;
+    }
+
+    if (maxMin > MaxLength)
+    {
+        return boxHit;
+    }
+    boxHit.hit = true;
+    boxHit.hitPoint = boid.worldPosition.xyz + worldDir * maxMin;
+    boxHit.depth = maxMin;
+    return boxHit;
+    
 }
 
 float3 WallAvoidance(uint id)
@@ -49,37 +118,70 @@ float3 WallAvoidance(uint id)
     {
         for (int j = 0; j < _ObstacleAmount; ++j)
         {
-            bool areaHit = BoxRaycast(_Boids[id], _AvoidancePoints[i], _Obstacles[j]);
-            if (areaHit.hit)
+            BoxHit boxHit = BoxRaycast(_Boids[id], _AvoidancePoints[i], _Obstacles[j]);
+            if (boxHit.hit)
             {
-            
+                force = force + normalize(_Boids[id].worldPosition.xyz - boxHit.hitPoint.xyz) / (boxHit.depth * boxHit.depth + 1.0f);
             }
         }
     }
+    
     return force;
 }
 
-float3 CohesionRule(uint id)
+bool IsClosestBoid(Boid currentBoid, Boid otherBoid)
 {
-    return float3(0.0f, 0.0f, 0.0f);
+    float3 dir = currentBoid.worldPosition - otherBoid.worldPosition;
+    if (dot(dir, dir) > (currentBoid.worldPosition.a * currentBoid.worldPosition.a))
+    {
+        return false;
+    }
+    return true;
 }
 
-float3 SepeationRule(uint id)
+float3 CohesionRule(Boid otherBoid)
 {
-    return float3(0.0f, 0.0f, 0.0f);
+    return otherBoid.worldPosition.xyz;
 }
 
-float3 AlignmentRule(uint id)
+float3 SepeationRule(Boid currentBoid, Boid otherBoid)
 {
-    return float3(0.0f, 0.0f, 0.0f);
+    return currentBoid.worldPosition.xyz - otherBoid.worldPosition.xyz;
+}
+
+float3 AlignmentRule(Boid otherBoid)
+{
+    return otherBoid.velocity.xyz;
+
 }
 
 [numthreads(8,1,1)]
-void FlockSimulation (uint id : SV_DispatchThreadID)
+void FlockSimulation(uint3 id : SV_DispatchThreadID)
 {
-    float3 acceleration = CohesionRule(id);
-    acceleration += SepeationRule(id);
-    acceleration += AlignmentRule(id);
-    acceleration += WallAvoidance(id);
-    _Boids[id].acceleration.xyz = _Boids[id].acceleration.xyz + acceleration;
+    
+    float3 cohesion = float3(0.0f, 0.0f, 0.0f);
+    float3 separationDir = float3(0.0f, 0.0f, 0.0f);
+    float3 alignment = float3(0.0f, 0.0f, 0.0f);
+    float3 acceleration = float3(0.0f, 0.0f, 0.0f);
+    int amount = 0;
+    for (int i = 0; i < _BoidsAmount; ++i)
+    {
+        if (IsClosestBoid(_Boids[id.x], _Boids[i]) || 0 == i)
+        {
+            continue;
+        }
+        cohesion += CohesionRule(_Boids[i]);
+        separationDir += SepeationRule(_Boids[id.x], _Boids[i]);
+        alignment += AlignmentRule(_Boids[i]);
+        amount++;
+    }
+    if(amount > 0)
+    {
+        acceleration += (alignment / float(amount)) * AlignmentStrength;
+        acceleration += (cohesion / float(amount)) * CohesionStrength;
+        acceleration += ((separationDir / float(amount)) - _Boids[id.x].worldPosition.xyz) * SeparationStrength;
+
+    }
+    //acceleration += WallAvoidance(id) * WallAvoidanceStrength;  
+    _Boids[id.x].acceleration.xyz = acceleration;
 }
