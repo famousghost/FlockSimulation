@@ -307,7 +307,9 @@ namespace McFlockSystem
             List<ObstaclesBuffer> obstacleBuffer = new List<ObstaclesBuffer>();
             foreach (var obstacle in Obstacles)
             {
-                obstacleBuffer.Add(new ObstaclesBuffer(new Vector4(obstacle.Position.x, obstacle.Position.y, obstacle.Position.z, (int)obstacle.Type), obstacle.Size));
+                obstacleBuffer.Add(new ObstaclesBuffer(new Vector4(obstacle.Position.x, obstacle.Position.y, obstacle.Position.z, (int)obstacle.Type), 
+                                                       obstacle.Size,
+                                                       obstacle.Rotation));
             }
             _ObstaclesBuffer.SetData(obstacleBuffer.ToArray());
         }

@@ -236,6 +236,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &159845733
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +367,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &215996819
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,6 +498,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &221168206
 GameObject:
   m_ObjectHideFlags: 0
@@ -610,6 +664,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &258492957
 GameObject:
   m_ObjectHideFlags: 0
@@ -723,6 +795,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &396291647
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,6 +926,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &479182328
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,7 +991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Prefab: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
   _SpawnArea: {fileID: 590028304}
-  _BoidsCount: 512
+  _BoidsCount: 256
 --- !u!114 &479182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -896,19 +1004,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b9ef76cd2659ea46ac011206fde3fa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _QTreeOptimizationEnabled: 0
+  _QTreeOptimizationEnabled: 1
   _EnableBoidCheckVisualization: 0
   _QtreeManager: {fileID: 814126531}
   _FlockArea: {fileID: 590028304}
-  _CohesionStrength: 50
-  _SeparationStrength: 20
+  _CohesionStrength: 40
+  _SeparationStrength: 30
   _AligmentStrength: 80
-  _WallAvoidanceStrength: 800
+  _WallAvoidanceStrength: 1200
   _FlockSimulationComputeShader: {fileID: 7200000, guid: f0f7f8cee349c8c4da0507621bee17d1, type: 3}
   _SpherePitchSize: 30
   _SphereYawSize: 30
-  _MaxAngle: 135
-  _MaxRayLength: 30
+  _MaxAngle: 80
+  _MaxRayLength: 15
   _CalculationTypes: 1
   Boids: []
   Obstacles: []
@@ -1008,6 +1116,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,6 +1341,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &814126530
 GameObject:
   m_ObjectHideFlags: 0
@@ -1382,6 +1526,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,7 +1621,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.1670193, y: 0.77210486, z: -0.22629125, w: 0.56986916}
-  m_LocalPosition: {x: -185.23, y: 111.02, z: 43.42}
+  m_LocalPosition: {x: -137, y: 74, z: 43.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1579,6 +1741,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1128537840
 GameObject:
   m_ObjectHideFlags: 0
@@ -1692,6 +1872,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1138943004
 GameObject:
   m_ObjectHideFlags: 0
@@ -1840,6 +2038,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1194110020
 GameObject:
   m_ObjectHideFlags: 0
@@ -1953,6 +2169,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1210697140
 GameObject:
   m_ObjectHideFlags: 0
@@ -2112,6 +2346,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1414605635
 GameObject:
   m_ObjectHideFlags: 0
@@ -2322,6 +2574,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1626406100
 GameObject:
   m_ObjectHideFlags: 0
@@ -2435,6 +2705,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1665079542
 GameObject:
   m_ObjectHideFlags: 0
@@ -2752,6 +3040,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1922266266
 GameObject:
   m_ObjectHideFlags: 0
@@ -2780,8 +3086,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1922266266}
   m_LocalRotation: {x: 0.2577387, y: 0.09389742, z: 0.2150725, w: 0.9372822}
-  m_LocalPosition: {x: -30.9, y: -13.1, z: -1.1}
-  m_LocalScale: {x: 10, y: 50, z: 19.6}
+  m_LocalPosition: {x: -38.3, y: -13.1, z: -1.1}
+  m_LocalScale: {x: 10, y: 50, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1705734605}
@@ -2865,6 +3171,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1925348860
 GameObject:
   m_ObjectHideFlags: 0
@@ -2978,6 +3302,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1950887273
 GameObject:
   m_ObjectHideFlags: 0
@@ -3091,6 +3433,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1979638782
 GameObject:
   m_ObjectHideFlags: 0
@@ -3204,6 +3564,24 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &2109066229
 GameObject:
   m_ObjectHideFlags: 0
@@ -3317,3 +3695,21 @@ MonoBehaviour:
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
   Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0

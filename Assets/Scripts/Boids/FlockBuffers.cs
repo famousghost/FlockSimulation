@@ -27,13 +27,15 @@ namespace McFlockSystem
     [StructLayout(LayoutKind.Sequential)]
     public struct ObstaclesBuffer
     {
-        public ObstaclesBuffer(Vector4 position, Vector4 size)
+        public ObstaclesBuffer(Vector4 position, Vector4 size, Matrix4x4 rotation)
         {
             Position = position;
             Size = size;
+            Rotation = rotation;
         }
         public Vector4 Position; // x - posX, y - posY, z - posZ, w - (type 1: Sphere, 2: Box, 3: Custom)
         public Vector4 Size;
+        public Matrix4x4 Rotation;
     }
 
     [StructLayout(LayoutKind.Sequential)]

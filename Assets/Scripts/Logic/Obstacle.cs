@@ -15,6 +15,8 @@ namespace McFlockSystem
         public ObstacleType Type;
         public Vector4 Position;
         public Vector4 Size;
+        public Matrix4x4 Rotation;
+        public bool FlockArea;
 
         #endregion Public Variables
 
@@ -27,7 +29,8 @@ namespace McFlockSystem
         private void Update()
         {
             Position = transform.position;
-            Size = transform.localScale;
+            Size = new Vector4(transform.localScale.x, transform.localScale.y, transform.localScale.z, FlockArea ? 1.0f : 0.0f);
+            Rotation = Matrix4x4.TRS(Vector3.zero, transform.localRotation, Vector3.one);
         }
         private void OnEnable()
         {

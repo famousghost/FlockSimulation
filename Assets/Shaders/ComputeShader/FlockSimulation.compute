@@ -15,6 +15,7 @@ struct Obstacles
 {
     float4 worldPosition; //x - posX, y - posY, z - posZ, w type
     float4 worldSize;
+    float4x4 rotation;
 };
 
 struct AABB
@@ -69,9 +70,24 @@ BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
     {
         return boxHit;
     }
-    AABB aabb = CretaeAABBFromBox(obstacle);
-    const float3 pMin = (aabb.minVert - boid.worldPosition.xyz) / worldDir;
-    const float3 pMax = (aabb.maxVert - boid.worldPosition.xyz) / worldDir;
+    
+    float3 p = obstacle.worldPosition.xyz - boid.worldPosition.xyz;
+
+    float x = dot(obstacle.rotation[0].xyz, p);
+    float y = dot(obstacle.rotation[1].xyz, p);
+    float z = dot(obstacle.rotation[2].xyz, p);
+    
+    float rdX = dot(obstacle.rotation[0].xyz, worldDir);
+    float rdY = dot(obstacle.rotation[1].xyz, worldDir);
+    float rdZ = dot(obstacle.rotation[2].xyz, worldDir);
+    
+    float3 size = obstacle.worldSize.xyz * 0.5f;
+    
+    float3 minOBB = float3(x - size.x, y - size.y, z - size.z);
+    float3 maxOBB = float3(x + size.x, y + size.y, z + size.z);
+
+    const float3 pMin = minOBB / worldDir;
+    const float3 pMax = maxOBB / worldDir;
 
     const float3 tMin = float3(min(pMin.x, pMax.x), min(pMin.y, pMax.y), min(pMin.z, pMax.z));
     const float3 tMax = float3(max(pMin.x, pMax.x), max(pMin.y, pMax.y), max(pMin.z, pMax.z));
@@ -91,7 +107,7 @@ BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
     }
     if (maxMin <= 0.0f)
     {
-        if (minMax > MaxLength)
+        if (minMax > MaxLength || obstacle.worldSize.a == 0.0f)
         {
             return boxHit;
         }
