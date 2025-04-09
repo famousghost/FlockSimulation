@@ -79,7 +79,7 @@ namespace McFlockSystem
 
         public void Separation(ref Vector3 dir, Boid boid)
         {
-            Vector3 dirToBoid = (transform.position - boid.transform.position);
+            Vector3 dirToBoid = transform.position - boid.transform.position;
             dir += dirToBoid;
         }
 

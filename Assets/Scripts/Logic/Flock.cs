@@ -229,9 +229,10 @@ namespace McFlockSystem
 
                 if (totalAmount > 0)
                 {
-                    boid.UpdateAccelaration((aligementAccelaration / totalAmount) * _AligmentStrength);
-                    boid.UpdateAccelaration((cohesionPosition / totalAmount) * _CohesionStrength);
-                    boid.UpdateAccelaration(((separationDir / totalAmount) - boid.transform.position) * _SeparationStrength);
+
+                    boid.UpdateAccelaration((aligementAccelaration / totalAmount).normalized * _AligmentStrength);
+                    boid.UpdateAccelaration((cohesionPosition / totalAmount - boid.transform.position).normalized * _CohesionStrength);
+                    boid.UpdateAccelaration(((separationDir / totalAmount)).normalized * _SeparationStrength);
                 }
                 boid.AvoidWalls(_FlockArea, _WallAvoidanceStrength);
                 boid.UpdateBoid();
@@ -276,7 +277,7 @@ namespace McFlockSystem
                     new Vector4(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f),
                     new Vector4(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f),
                     boid.transform.localToWorldMatrix,
-                    boid.transform.worldToLocalMatrix)) ;
+                    boid.transform.worldToLocalMatrix));
             }
             _BoidsBuffer.SetData(boidsStructBuffers.ToArray());
         }
