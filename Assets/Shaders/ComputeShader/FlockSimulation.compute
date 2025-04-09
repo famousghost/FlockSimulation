@@ -180,9 +180,6 @@ void FlockSimulation(uint3 id : SV_DispatchThreadID)
         acceleration += normalize((cohesion / float(amount)) - _Boids[id.x].worldPosition.xyz) * CohesionStrength;
         acceleration += normalize((separationDir / float(amount))) * SeparationStrength;
     }
-    float3 wallAvoidanceForce = WallAvoidance(_Boids[id.x]);
-    acceleration = acceleration + wallAvoidanceForce * WallAvoidanceStrength;
+    acceleration = acceleration + WallAvoidance(_Boids[id.x]) * WallAvoidanceStrength;
     _Boids[id.x].acceleration.xyz = acceleration;
-    _Boids[id.x].wallAvoidanceDebug.xyz = wallAvoidanceForce * WallAvoidanceStrength;
-    _Boids[id.x].wallAvoidanceDebug.a = WallAvoidanceStrength;
 }
