@@ -40,7 +40,7 @@ namespace McFlockSystem
         #region Public Methods
         public void UpdateBoid()
         {
-            _Veclocity += _Acceleration * Time.deltaTime;
+            _Veclocity += _Acceleration * Time.deltaTime * Time.deltaTime;
             _Veclocity = _Veclocity.normalized * _MaxVelocity;
             transform.position += _Veclocity * Time.deltaTime;
             transform.forward = _Veclocity.normalized;

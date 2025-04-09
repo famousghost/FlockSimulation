@@ -146,6 +146,19 @@ namespace McFlockSystem
 
         private void OnDrawGizmos()
         {
+            /*foreach (var boid in Boids)
+            {
+                for (int j = 0; j < _AvoidancePoints.Count; ++j)
+                {
+                    Gizmos.color = Color.red;
+                    var worldSpacePoint = (Vector3)(boid.transform.localToWorldMatrix * _AvoidancePoints[j]);
+                    var dir = (worldSpacePoint - boid.transform.position).normalized;
+                    if (Mathf.Acos(Vector3.Dot(dir, boid.transform.forward)) <= _MaxAngle * Mathf.Deg2Rad)
+                    {
+                        Gizmos.DrawLine(boid.transform.position, boid.transform.localToWorldMatrix * _AvoidancePoints[j]);
+                    }
+                }
+            }*/
             if(!_EnableBoidCheckVisualization)
             {
                 return;
@@ -257,8 +270,10 @@ namespace McFlockSystem
             int i = 0;
             foreach(var boid in Boids)
             {
+                Debug.Log($"boidBuffer[{i}].wallAvoidanceForce = {_BoidsReadBufferData[i].WallAvoidanceDebug}");
                 var acceleration = _BoidsReadBufferData[i].Acceleration;
                 boid.UpdateAccelaration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
+                boid.AvoidWalls(_FlockArea, _WallAvoidanceStrength);
                 boid.UpdateBoid();
                 ++i;
             }
@@ -276,8 +291,8 @@ namespace McFlockSystem
                     new Vector4(boid.transform.forward.x, boid.transform.forward.y, boid.transform.forward.z, 1.0f),
                     new Vector4(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f),
                     new Vector4(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f),
-                    boid.transform.localToWorldMatrix,
-                    boid.transform.worldToLocalMatrix));
+                    Vector4.zero,
+                    boid.transform.localToWorldMatrix));
             }
             _BoidsBuffer.SetData(boidsStructBuffers.ToArray());
         }

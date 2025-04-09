@@ -98,9 +98,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _EnableDebug: 0
-  _FlockRadius: 15
-  _SpherePitchSize: 30
-  _SphereYawSize: 30
+  _FlockRadius: 30
+  _SpherePitchSize: 15
+  _SphereYawSize: 15
   _DebugRadius: 0.05
   _MaxAngle: 70
   _MaxRayLength: 18
