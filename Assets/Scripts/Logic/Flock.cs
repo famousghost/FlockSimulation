@@ -256,8 +256,11 @@ namespace McFlockSystem
         private void FlockSimulationGPU()
         {
             PrepareBoidsBuffer();
+            PrepareObstaclesBuffer();
             _FlockSimulationComputeShader.SetInt(_BoidsAmountId, Boids.Count);
             _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _BoidsBufferId, _BoidsBuffer);
+            _FlockSimulationComputeShader.SetInt(_ObstacleAmountId, Obstacles.Count);
+            _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _ObstalceBufferId, _ObstaclesBuffer);
             uint kernelX = 0u;
             _FlockSimulationComputeShader.GetKernelThreadGroupSizes(_FlockShaderKernelIndex, out kernelX, out _, out _);
             _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)kernelX, 1, 1);
@@ -271,7 +274,6 @@ namespace McFlockSystem
             {
                 var acceleration = _BoidsReadBufferData[i].Acceleration;
                 boid.UpdateAccelaration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
-                boid.AvoidWalls(_FlockArea, _WallAvoidanceStrength);
                 boid.UpdateBoid();
                 ++i;
             }
@@ -349,11 +351,8 @@ namespace McFlockSystem
         {
             PrepareAvoidancePointsBuffer();
             PrepareFlockDataBuffer();
-            PrepareObstaclesBuffer();
             _FlockSimulationComputeShader.SetInt(_AvoidancePointsAmountId, _AvoidancePoints.Count);
             _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _AvoidancePointsBufferId, _AvoidancePointsBuffer);
-            _FlockSimulationComputeShader.SetInt(_ObstacleAmountId, Obstacles.Count);
-            _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _ObstalceBufferId, _ObstaclesBuffer);
             _FlockSimulationComputeShader.SetConstantBuffer(_FlockForcesConstantBufferId, _ForcesBuffer, 0, sizeof(float) * 6);
         }
 
