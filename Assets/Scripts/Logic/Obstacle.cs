@@ -30,7 +30,9 @@ namespace McFlockSystem
         {
             Position = transform.position;
             Size = new Vector4(transform.localScale.x, transform.localScale.y, transform.localScale.z, FlockArea ? 1.0f : 0.0f);
-            Rotation = Matrix4x4.TRS(Vector3.zero, transform.localRotation, Vector3.one);
+            Rotation.SetRow(0, transform.right);
+            Rotation.SetRow(1, transform.up);
+            Rotation.SetRow(2, transform.forward);
         }
         private void OnEnable()
         {

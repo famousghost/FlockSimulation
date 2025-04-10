@@ -1,9 +1,7 @@
 namespace McFlockSystem
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.Runtime.InteropServices;
-    using Unity.VisualScripting;
     using UnityEngine;
     using UnityEngine.Rendering;
 
@@ -436,6 +434,12 @@ namespace McFlockSystem
 
             Vector3 worldDir = (avoidancePointWS - boid.transform.position).normalized;
 
+            
+            if (Mathf.Acos(Vector3.Dot(worldDir, boid.transform.forward)) >= _MaxAngle * Mathf.Deg2Rad)
+            {
+                return boxHit;
+            }
+
             Vector3 p = (Vector3)obstacle.Position - boid.transform.position;
 
             float x = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(0), p);
@@ -446,7 +450,7 @@ namespace McFlockSystem
             float rdY = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(1), worldDir);
             float rdZ = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(2), worldDir);
 
-            Vector3 size = obstacle.Position * 0.5f;
+            Vector3 size = obstacle.Size * 0.5f;
 
             Vector3 minOBB = new Vector3(x - size.x, y - size.y, z - size.z);
             Vector3 maxOBB = new Vector3(x + size.x, y + size.y, z + size.z);

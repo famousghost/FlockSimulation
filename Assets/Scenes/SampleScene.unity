@@ -991,7 +991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Prefab: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
   _SpawnArea: {fileID: 590028304}
-  _BoidsCount: 1024
+  _BoidsCount: 4096
 --- !u!114 &479182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1013,11 +1013,11 @@ MonoBehaviour:
   _AligmentStrength: 80
   _WallAvoidanceStrength: 800
   _FlockSimulationComputeShader: {fileID: 7200000, guid: f0f7f8cee349c8c4da0507621bee17d1, type: 3}
-  _SpherePitchSize: 20
-  _SphereYawSize: 20
+  _SpherePitchSize: 30
+  _SphereYawSize: 30
   _MaxAngle: 80
   _MaxRayLength: 15
-  _CalculationTypes: 1
+  _CalculationTypes: 2
   Boids: []
   Obstacles: []
 --- !u!1 &579381952
@@ -2211,7 +2211,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1210697140}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2231,6 +2231,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250176afa0c92c04e839b0b3e1ca943e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _Obstacle: {fileID: 1414605640}
+  _MaxAngle: 80
+  _MaxRayLength: 10
   _Sphere: {fileID: 1665079542}
   _Cube: {fileID: 1414605635}
 --- !u!1 &1331494446
@@ -2376,6 +2379,7 @@ GameObject:
   - component: {fileID: 1414605638}
   - component: {fileID: 1414605637}
   - component: {fileID: 1414605636}
+  - component: {fileID: 1414605640}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -2461,6 +2465,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1414605640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414605635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 1
+  Position: {x: 0, y: 0, z: 0, w: 0}
+  Size: {x: 0, y: 0, z: 0, w: 0}
+  Rotation:
+    e00: 0
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 0
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 0
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 0
+  FlockArea: 0
 --- !u!1 &1511282584
 GameObject:
   m_ObjectHideFlags: 0
@@ -2812,14 +2849,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1665079542}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.781, y: 2.213, z: -2.39}
+  m_LocalRotation: {x: 0, y: 0.6071678, z: 0, w: 0.79457366}
+  m_LocalPosition: {x: -2.247, y: 0.13, z: -0.13}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 74.77, z: 0}
 --- !u!1 &1705734604
 GameObject:
   m_ObjectHideFlags: 0
