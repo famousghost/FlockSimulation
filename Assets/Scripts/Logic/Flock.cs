@@ -148,7 +148,17 @@ namespace McFlockSystem
 
         private void OnDrawGizmos()
         {
-            /*foreach (var boid in Boids)
+            /*List<Vector3> points = new List<Vector3>();
+            foreach(var boid in Boids)
+            {
+                points = WallAvoidance(boid);
+                Gizmos.color = Color.yellow;
+                foreach (var point in points)
+                {
+                    Gizmos.DrawSphere(point, 1.0f);
+                }
+            }
+            foreach (var boid in Boids)
             {
                 for (int j = 0; j < _AvoidancePoints.Count; ++j)
                 {
@@ -389,5 +399,109 @@ namespace McFlockSystem
         }
 
         #endregion Private Methods
+
+        #region Debug Methods
+        public struct BoxHit
+        {
+            public Vector3 hitPoint;
+            public float depth;
+            public bool hit;
+        }
+
+        List<Vector3> WallAvoidance(Boid boid)
+        {
+            List<Vector3> hitPoints = new List<Vector3>();
+            for (int i = 0; i < _AvoidancePoints.Count; ++i)
+            {
+                for (int j = 0; j < Obstacles.Count; ++j)
+                {
+                    BoxHit boxHit = BoxRaycast(boid, _AvoidancePoints[i], Obstacles[j]);
+                    if (boxHit.hit)
+                    {
+                        hitPoints.Add(boxHit.hitPoint);
+                    }
+                }
+            }
+            return hitPoints;
+        }
+
+        BoxHit BoxRaycast(Boid boid, Vector4 avoidancePoint, Obstacle obstacle)
+        {
+            BoxHit boxHit;
+            boxHit.hit = false;
+            boxHit.hitPoint = new Vector3(0.0f, 0.0f, 0.0f);
+            boxHit.depth = 0.0f;
+
+            Vector3 avoidancePointWS = boid.transform.TransformPoint(avoidancePoint);
+
+            Vector3 worldDir = (avoidancePointWS - boid.transform.position).normalized;
+
+            Vector3 p = (Vector3)obstacle.Position - boid.transform.position;
+
+            float x = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(0), p);
+            float y = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(1), p);
+            float z = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(2), p);
+
+            float rdX = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(0), worldDir);
+            float rdY = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(1), worldDir);
+            float rdZ = Vector3.Dot((Vector3)obstacle.Rotation.GetRow(2), worldDir);
+
+            Vector3 size = obstacle.Position * 0.5f;
+
+            Vector3 minOBB = new Vector3(x - size.x, y - size.y, z - size.z);
+            Vector3 maxOBB = new Vector3(x + size.x, y + size.y, z + size.z);
+
+            Vector3 newRay = new Vector3(rdX, rdY, rdZ);
+
+            Vector3 pMin = VectorDiv(minOBB, newRay);
+            Vector3 pMax = VectorDiv(maxOBB, newRay);
+
+            Vector3 tMin = new Vector3(Mathf.Min(pMin.x, pMax.x), Mathf.Min(pMin.y, pMax.y), Mathf.Min(pMin.z, pMax.z));
+            Vector3 tMax = new Vector3(Mathf.Max(pMin.x, pMax.x), Mathf.Max(pMin.y, pMax.y), Mathf.Max(pMin.z, pMax.z));
+
+            float maxMin = Mathf.Max(Mathf.Max(tMin.x, tMin.y), tMin.z);
+
+            float minMax = Mathf.Min(Mathf.Min(tMax.x, tMax.y), tMax.z);
+
+            if (minMax <= 0.0f)
+            {
+                return boxHit;
+            }
+
+            if (minMax <= maxMin)
+            {
+                return boxHit;
+            }
+            if (maxMin <= 0.0f)
+            {
+                if (minMax > _MaxRayLength)
+                {
+                    return boxHit;
+                }
+                boxHit.hit = true;
+                boxHit.hitPoint = boid.transform.position + worldDir * minMax;
+                boxHit.depth = minMax;
+                return boxHit;
+            }
+
+            if (maxMin > _MaxRayLength)
+            {
+                return boxHit;
+            }
+            boxHit.hit = true;
+            boxHit.hitPoint = boid.transform.position + worldDir * maxMin;
+            boxHit.depth = maxMin;
+            return boxHit;
+        }
+
+        private Vector3 VectorDiv(Vector3 a, Vector3 b)
+        {
+            if (b.x == 0.0f || b.y == 0.0f || b.z == 0.0f)
+            {
+                return Vector3.zero;
+            }
+            return new Vector3(a.x / b.x, a.y / b.y, a.z / b.z);
+        }
+        #endregion Debug Methods
     }
 }//McFlockSystem

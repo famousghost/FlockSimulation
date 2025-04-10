@@ -87,9 +87,11 @@ BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
     
     float3 minOBB = float3(x - size.x, y - size.y, z - size.z);
     float3 maxOBB = float3(x + size.x, y + size.y, z + size.z);
+    
+    float3 newDir = float3(rdX, rdY, rdZ);
 
-    const float3 pMin = minOBB / worldDir;
-    const float3 pMax = maxOBB / worldDir;
+    const float3 pMin = minOBB / newDir;
+    const float3 pMax = maxOBB / newDir;
 
     const float3 tMin = float3(min(pMin.x, pMax.x), min(pMin.y, pMax.y), min(pMin.z, pMax.z));
     const float3 tMax = float3(max(pMin.x, pMax.x), max(pMin.y, pMax.y), max(pMin.z, pMax.z));
@@ -127,7 +129,6 @@ BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
     boxHit.hitPoint = boid.worldPosition.xyz + worldDir * maxMin;
     boxHit.depth = maxMin;
     return boxHit;
-    
 }
 
 float3 WallAvoidance(Boid boid)

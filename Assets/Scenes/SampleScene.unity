@@ -1013,11 +1013,11 @@ MonoBehaviour:
   _AligmentStrength: 80
   _WallAvoidanceStrength: 800
   _FlockSimulationComputeShader: {fileID: 7200000, guid: f0f7f8cee349c8c4da0507621bee17d1, type: 3}
-  _SpherePitchSize: 30
-  _SphereYawSize: 30
+  _SpherePitchSize: 20
+  _SphereYawSize: 20
   _MaxAngle: 80
   _MaxRayLength: 15
-  _CalculationTypes: 2
+  _CalculationTypes: 1
   Boids: []
   Obstacles: []
 --- !u!1 &579381952
@@ -3087,7 +3087,7 @@ Transform:
   m_GameObject: {fileID: 1922266266}
   m_LocalRotation: {x: 0.2577387, y: 0.09389742, z: 0.2150725, w: 0.9372822}
   m_LocalPosition: {x: -38.3, y: -13.1, z: -1.1}
-  m_LocalScale: {x: 10, y: 50, z: 20}
+  m_LocalScale: {x: 20, y: 50, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1705734605}
