@@ -1,15 +1,17 @@
 namespace McFlockSystem
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using Unity.VisualScripting;
     using UnityEngine;
+    using UnityEngine.Rendering;
 
     public enum CalculationTypes
     {
         CPU = 0,
         GPU = 1,
-        GPU_Octree = 2
+        GPU_ASYNC = 2
     }
 
     public sealed class Flock : MonoBehaviour
@@ -123,7 +125,7 @@ namespace McFlockSystem
             {
                 FlockSimulationCPU();
             }
-            if(_CalculationTypes == CalculationTypes.GPU)
+            if(_CalculationTypes == CalculationTypes.GPU || _CalculationTypes == CalculationTypes.GPU_ASYNC)
             {
                 FlockSimulationGPU();
             }
@@ -264,20 +266,44 @@ namespace McFlockSystem
             uint kernelX = 0u;
             _FlockSimulationComputeShader.GetKernelThreadGroupSizes(_FlockShaderKernelIndex, out kernelX, out _, out _);
             _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)kernelX, 1, 1);
-            _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
-            _BoidsBuffer.GetData(_BoidsReadBufferData);
-            _BoidsBuffer.Dispose();
+            if (_CalculationTypes == CalculationTypes.GPU)
+            {
+                _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
+                _BoidsBuffer.GetData(_BoidsReadBufferData);
+                _BoidsBuffer.Dispose();
 
+                UpdateBoidsGPU();
+            }
+            else if (_CalculationTypes == CalculationTypes.GPU_ASYNC)
+            {
+                var request = AsyncGPUReadback.Request(_BoidsBuffer,
+                    (AsyncGPUReadbackRequest request) =>
+                    {
+                        if (Boids == null && Boids.Count == 0)
+                        {
+                            return;
+                        }
+                        _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
+                        request.GetData<BoidsStructureBuffer>().CopyTo(_BoidsReadBufferData);
+                        _BoidsBuffer.Dispose();
 
+                        UpdateBoidsGPU();
+                    }
+                );
+                request.Update();
+            }
+        }
+
+        private void UpdateBoidsGPU()
+        {
             int i = 0;
-            foreach(var boid in Boids)
+            foreach (var boid in Boids)
             {
                 var acceleration = _BoidsReadBufferData[i].Acceleration;
                 boid.UpdateAccelaration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
                 boid.UpdateBoid();
                 ++i;
             }
-            
         }
 
         private void PrepareBoidsBuffer()

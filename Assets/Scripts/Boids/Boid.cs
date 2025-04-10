@@ -1,12 +1,7 @@
 namespace McFlockSystem
 {
     using System.Collections.Generic;
-    using TMPro;
-    using Unity.VisualScripting;
-    using UnityEditorInternal;
     using UnityEngine;
-    using UnityEngine.Assertions.Must;
-    using UnityEngine.UIElements;
 
     public sealed class Boid : MonoBehaviour
     {
