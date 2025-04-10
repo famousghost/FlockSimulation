@@ -343,8 +343,12 @@ namespace McFlockSystem
                     float x = Mathf.Cos(yawAngle * 2.0f * Mathf.PI) * Mathf.Cos(pitchAngle * 2.0f * Mathf.PI);
                     float y = Mathf.Sin(pitchAngle * 2.0f * Mathf.PI);
                     float z = Mathf.Sin(yawAngle * 2.0f * Mathf.PI) * Mathf.Cos(pitchAngle * 2.0f * Mathf.PI);
+
                     Vector3 point = new Vector3(x, y, z);
-                    _AvoidancePoints.Add(new Vector4(point.x, point.y, point.z, 1.0f));
+                    if (Mathf.Acos(Vector3.Dot(point, Vector3.forward)) <= _MaxAngle * Mathf.Deg2Rad)
+                    {
+                        _AvoidancePoints.Add(new Vector4(point.x, point.y, point.z, 1.0f));
+                    }
                 }
             }
         }

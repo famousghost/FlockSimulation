@@ -66,10 +66,12 @@ BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
     const float3 avoidancePointWS = mul(boid.localToWorldMatrix, avoidancePoint).xyz;
 
     const float3 worldDir = normalize(avoidancePointWS - boid.worldPosition.xyz);
+    //TODO: Verify if with sending less rays to gpu it works the same
+    /*
     if (acos(dot(worldDir, boid.forward.xyz)) >= radians(MaxAngle))
     {
         return boxHit;
-    }
+    }*/
     
     float3 p = obstacle.worldPosition.xyz - boid.worldPosition.xyz;
 
@@ -199,7 +201,5 @@ void FlockSimulation(uint3 id : SV_DispatchThreadID)
     float3 wallAvoidnaceForce = WallAvoidance(_Boids[id.x]);
     acceleration = acceleration + wallAvoidnaceForce * WallAvoidanceStrength;
     _Boids[id.x].acceleration.xyz = acceleration;
-    _Boids[id.x].velocity.a = _ObstacleAmount;
-    _Boids[id.x].wallAvoidanceDebug.xyz = wallAvoidnaceForce * WallAvoidanceStrength;
-
+    _Boids[id.x].velocity.a = _AvoidancePointAmount;
 }

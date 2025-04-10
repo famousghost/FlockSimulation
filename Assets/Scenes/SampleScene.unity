@@ -991,7 +991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Prefab: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
   _SpawnArea: {fileID: 590028304}
-  _BoidsCount: 256
+  _BoidsCount: 1024
 --- !u!114 &479182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1004,7 +1004,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b9ef76cd2659ea46ac011206fde3fa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _QTreeOptimizationEnabled: 1
+  _QTreeOptimizationEnabled: 0
   _EnableBoidCheckVisualization: 0
   _QtreeManager: {fileID: 814126531}
   _FlockArea: {fileID: 590028304}
@@ -1013,8 +1013,8 @@ MonoBehaviour:
   _AligmentStrength: 80
   _WallAvoidanceStrength: 1200
   _FlockSimulationComputeShader: {fileID: 7200000, guid: f0f7f8cee349c8c4da0507621bee17d1, type: 3}
-  _SpherePitchSize: 30
-  _SphereYawSize: 30
+  _SpherePitchSize: 20
+  _SphereYawSize: 20
   _MaxAngle: 80
   _MaxRayLength: 15
   _CalculationTypes: 1
