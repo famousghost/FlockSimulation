@@ -1013,8 +1013,8 @@ MonoBehaviour:
   _AligmentStrength: 80
   _WallAvoidanceStrength: 800
   _FlockSimulationComputeShader: {fileID: 7200000, guid: f0f7f8cee349c8c4da0507621bee17d1, type: 3}
-  _SpherePitchSize: 30
-  _SphereYawSize: 30
+  _SpherePitchSize: 20
+  _SphereYawSize: 20
   _MaxAngle: 80
   _MaxRayLength: 15
   _CalculationTypes: 2

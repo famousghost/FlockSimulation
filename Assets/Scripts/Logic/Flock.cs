@@ -195,6 +195,7 @@ namespace McFlockSystem
         private ComputeBuffer _ForcesBuffer;
 
         private List<Vector4> _AvoidancePoints;
+        private BoidsStructureBuffer[] _BoidsBufferList;
 
         private int _FlockShaderKernelIndex;
 
@@ -266,11 +267,8 @@ namespace McFlockSystem
         private void FlockSimulationGPU()
         {
             PrepareBoidsBuffer();
-            PrepareObstaclesBuffer();
             _FlockSimulationComputeShader.SetInt(_BoidsAmountId, Boids.Count);
             _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _BoidsBufferId, _BoidsBuffer);
-            _FlockSimulationComputeShader.SetInt(_ObstacleAmountId, Obstacles.Count);
-            _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _ObstalceBufferId, _ObstaclesBuffer);
             uint kernelX = 0u;
             _FlockSimulationComputeShader.GetKernelThreadGroupSizes(_FlockShaderKernelIndex, out kernelX, out _, out _);
             _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)kernelX, 1, 1);
@@ -284,21 +282,20 @@ namespace McFlockSystem
             }
             else if (_CalculationTypes == CalculationTypes.GPU_ASYNC)
             {
-                var request = AsyncGPUReadback.Request(_BoidsBuffer,
+                var asyncRequest = AsyncGPUReadback.Request(_BoidsBuffer,
                     (AsyncGPUReadbackRequest request) =>
                     {
                         if (Boids == null && Boids.Count == 0)
                         {
                             return;
                         }
-                        _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
                         request.GetData<BoidsStructureBuffer>().CopyTo(_BoidsReadBufferData);
                         _BoidsBuffer.Dispose();
 
                         UpdateBoidsGPU();
                     }
                 );
-                request.Update();
+                asyncRequest.Update();
             }
         }
 
@@ -307,6 +304,10 @@ namespace McFlockSystem
             int i = 0;
             foreach (var boid in Boids)
             {
+                if(boid == null)
+                {
+                    continue;
+                }
                 var acceleration = _BoidsReadBufferData[i].Acceleration;
                 boid.UpdateAccelaration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
                 boid.UpdateBoid();
@@ -317,25 +318,42 @@ namespace McFlockSystem
         private void PrepareBoidsBuffer()
         {
             _BoidsBuffer = new ComputeBuffer(Boids.Count, Marshal.SizeOf<BoidsStructureBuffer>(), ComputeBufferType.Structured);
-            List<BoidsStructureBuffer> boidsStructBuffers = new List<BoidsStructureBuffer>(); 
-            foreach(var boid in Boids)
+            if (_BoidsBufferList == null)
             {
-                boidsStructBuffers.Add(new BoidsStructureBuffer(
-                    new Vector4(boid.transform.position.x, boid.transform.position.y, boid.transform.position.z, boid.FlockRadius),
-                    new Vector4(boid.transform.forward.x, boid.transform.forward.y, boid.transform.forward.z, 1.0f),
-                    new Vector4(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f),
-                    new Vector4(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f),
-                    Vector4.zero,
-                    boid.transform.localToWorldMatrix));
+                _BoidsBufferList = new BoidsStructureBuffer[Boids.Count];
+                for(int i = 0; i < Boids.Count; ++i)
+                {
+                    _BoidsBufferList[i] = new BoidsStructureBuffer();
+                }
             }
-            _BoidsBuffer.SetData(boidsStructBuffers.ToArray());
+            for(int i = 0; i < Boids.Count; ++i)
+            {
+                SetupBoidBuffer(i);
+            }
+            _BoidsBuffer.SetData(_BoidsBufferList);
         }
 
-        private void PrepareObstaclesBuffer()
+        private void SetupBoidBuffer(int index)
+        {
+            var boid = Boids[index];
+            _BoidsBufferList[index].WorldPosition.Set(boid.transform.position.x, boid.transform.position.y, boid.transform.position.z, boid.FlockRadius);
+            _BoidsBufferList[index].WorldDirection.Set(boid.transform.forward.x, boid.transform.forward.y, boid.transform.forward.z, 1.0f);
+            _BoidsBufferList[index].Velocity.Set(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f);
+            _BoidsBufferList[index].Acceleration.Set(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f);
+            _BoidsBufferList[index].LocalToWorld = boid.transform.localToWorldMatrix;
+            /*_BoidsBufferList[index] = new BoidsStructureBuffer(
+                                new Vector4(boid.transform.position.x, boid.transform.position.y, boid.transform.position.z, boid.FlockRadius),
+                                new Vector4(boid.transform.forward.x, boid.transform.forward.y, boid.transform.forward.z, 1.0f),
+                                new Vector4(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f),
+                                new Vector4(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f),
+                                boid.transform.localToWorldMatrix);*/
+        }
+
+        private bool PrepareObstaclesBuffer()
         {
             if(Obstacles == null || Obstacles.Count == 0)
             {
-                return;
+                return false;
             }
             _ObstaclesBuffer = new ComputeBuffer(Obstacles.Count, Marshal.SizeOf<ObstaclesBuffer>(), ComputeBufferType.Structured);
             List<ObstaclesBuffer> obstacleBuffer = new List<ObstaclesBuffer>();
@@ -346,14 +364,12 @@ namespace McFlockSystem
                                                        obstacle.Rotation));
             }
             _ObstaclesBuffer.SetData(obstacleBuffer.ToArray());
+            return true;
         }
 
         private void PrepareAvoidancePointsBuffer()
         {
-            if(_AvoidancePoints == null)
-            {
-                _AvoidancePoints = new List<Vector4>();
-            }
+            _AvoidancePoints = new List<Vector4>();
             GenerateAvoidancePoints();
             _AvoidancePointsBuffer = new ComputeBuffer(_AvoidancePoints.Count, sizeof(float) * 4, ComputeBufferType.Structured);
             _AvoidancePointsBuffer.SetData(_AvoidancePoints.ToArray());
@@ -389,11 +405,18 @@ namespace McFlockSystem
 
         private void InitializeBuffers()
         {
+            _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
             PrepareAvoidancePointsBuffer();
             PrepareFlockDataBuffer();
             _FlockSimulationComputeShader.SetInt(_AvoidancePointsAmountId, _AvoidancePoints.Count);
             _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _AvoidancePointsBufferId, _AvoidancePointsBuffer);
             _FlockSimulationComputeShader.SetConstantBuffer(_FlockForcesConstantBufferId, _ForcesBuffer, 0, sizeof(float) * 6);
+            if(!PrepareObstaclesBuffer())
+            {
+                return;
+            }
+            _FlockSimulationComputeShader.SetInt(_ObstacleAmountId, Obstacles.Count);
+            _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _ObstalceBufferId, _ObstaclesBuffer);
         }
 
         #endregion Private Methods

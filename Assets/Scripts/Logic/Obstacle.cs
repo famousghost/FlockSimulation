@@ -26,6 +26,15 @@ namespace McFlockSystem
 
         #region Unity Methods
 
+        private void Awake()
+        {
+            Position = transform.position;
+            Size = new Vector4(transform.localScale.x, transform.localScale.y, transform.localScale.z, FlockArea ? 1.0f : 0.0f);
+            Rotation.SetRow(0, transform.right);
+            Rotation.SetRow(1, transform.up);
+            Rotation.SetRow(2, transform.forward);
+        }
+
         private void Update()
         {
             Position = transform.position;

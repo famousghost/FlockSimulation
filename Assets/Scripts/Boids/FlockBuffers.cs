@@ -7,20 +7,19 @@ namespace McFlockSystem
     [StructLayout(LayoutKind.Sequential)]
     public struct BoidsStructureBuffer
     {
-        public BoidsStructureBuffer(Vector4 worldPosition, Vector4 worldDirection, Vector4 veclocity, Vector4 acceleration, Vector4 wallAvoidanceDebug, Matrix4x4 localToWorld)
+  
+        public BoidsStructureBuffer(Vector4 worldPosition, Vector4 worldDirection, Vector4 veclocity, Vector4 acceleration, Matrix4x4 localToWorld)
         {
             WorldPosition = worldPosition;
             WorldDirection = worldDirection;
             Velocity = veclocity;
             Acceleration = acceleration;
-            WallAvoidanceDebug = wallAvoidanceDebug;
             LocalToWorld = localToWorld;
         }
         public Vector4 WorldPosition;
         public Vector4 WorldDirection;
         public Vector4 Velocity;
         public Vector4 Acceleration;
-        public Vector4 WallAvoidanceDebug;
         public Matrix4x4 LocalToWorld;
     }
 
