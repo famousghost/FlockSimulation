@@ -208,8 +208,6 @@ namespace McFlockSystem
         private readonly int _AvoidancePointsAmountId = Shader.PropertyToID("_AvoidancePointAmount");
 
         private readonly string _FlockShaderKernelName = "FlockSimulation";
-
-        private BoidsStructureBuffer[] _BoidsReadBufferData;
         #endregion Private Variables
 
         #region Private Methods
@@ -272,7 +270,7 @@ namespace McFlockSystem
             _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)kernelX, 1, 1);
             if (_CalculationTypes == CalculationTypes.GPU)
             {
-                _BoidsBuffer.GetData(_BoidsReadBufferData);
+                _BoidsBuffer.GetData(_BoidsBufferList);
 
                 UpdateBoidsGPU();
             }
@@ -285,7 +283,7 @@ namespace McFlockSystem
                         {
                             return;
                         }
-                        request.GetData<BoidsStructureBuffer>().CopyTo(_BoidsReadBufferData);
+                        request.GetData<BoidsStructureBuffer>().CopyTo(_BoidsBufferList);
 
                         UpdateBoidsGPU();
                     }
@@ -303,7 +301,7 @@ namespace McFlockSystem
                 {
                     continue;
                 }
-                var acceleration = _BoidsReadBufferData[i].Acceleration;
+                var acceleration = _BoidsBufferList[i].Acceleration;
                 boid.UpdateAccelaration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
                 boid.UpdateBoid();
                 ++i;
@@ -401,7 +399,6 @@ namespace McFlockSystem
         {
             if (Boids != null && Boids.Count != 0)
             {
-                _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
                 _BoidsBuffer = new ComputeBuffer(Boids.Count, Marshal.SizeOf<BoidsStructureBuffer>(), ComputeBufferType.Structured, ComputeBufferMode.Immutable);
                 PrepareBoidsBuffer();
                 _FlockSimulationComputeShader.SetInt(_BoidsAmountId, Boids.Count);

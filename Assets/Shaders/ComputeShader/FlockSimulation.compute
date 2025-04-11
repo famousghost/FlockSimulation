@@ -132,9 +132,9 @@ float3 WallAvoidance(Boid boid)
     return force;
 }
 
-bool IsClosestBoid(Boid currentBoid, Boid otherBoid)
+bool IsClosestBoid(const Boid currentBoid, const Boid otherBoid)
 {
-    float3 dir = currentBoid.worldPosition.xyz - otherBoid.worldPosition.xyz;
+    const float3 dir = currentBoid.worldPosition.xyz - otherBoid.worldPosition.xyz;
     if (dot(dir, dir) > (currentBoid.worldPosition.a * currentBoid.worldPosition.a))
     {
         return false;
@@ -142,24 +142,24 @@ bool IsClosestBoid(Boid currentBoid, Boid otherBoid)
     return true;
 }
 
-float3 CohesionRule(Boid otherBoid)
+float3 CohesionRule(const Boid otherBoid)
 {
     return otherBoid.worldPosition.xyz;
 }
 
-float3 SepeationRule(Boid currentBoid, Boid otherBoid)
+float3 SepeationRule(const Boid currentBoid, const Boid otherBoid)
 {
     return normalize(currentBoid.worldPosition.xyz - otherBoid.worldPosition.xyz);
 }
 
-float3 AlignmentRule(Boid otherBoid)
+float3 AlignmentRule(const Boid otherBoid)
 {
     return otherBoid.velocity.xyz;
 
 }
 
 [numthreads(8,1,1)]
-void FlockSimulation(uint3 id : SV_DispatchThreadID)
+void FlockSimulation(uint id : SV_DispatchThreadID)
 {
     float3 cohesion = float3(0.0f, 0.0f, 0.0f);
     float3 separationDir = float3(0.0f, 0.0f, 0.0f);
@@ -168,12 +168,12 @@ void FlockSimulation(uint3 id : SV_DispatchThreadID)
     int amount = 0;
     for (int i = 0; i < _BoidsAmount; ++i)
     {
-        if (!IsClosestBoid(_Boids[id.x], _Boids[i]) || id.x == i)
+        if (!IsClosestBoid(_Boids[id], _Boids[i]) || id == i)
         {
             continue;
         }
         cohesion += CohesionRule(_Boids[i]);
-        separationDir += SepeationRule(_Boids[id.x], _Boids[i]);
+        separationDir += SepeationRule(_Boids[id], _Boids[i]);
         alignment += AlignmentRule(_Boids[i]);
         amount++;
     }
@@ -183,6 +183,6 @@ void FlockSimulation(uint3 id : SV_DispatchThreadID)
         acceleration += normalize((cohesion / float(amount)) - _Boids[id.x].worldPosition.xyz) * CohesionStrength;
         acceleration += normalize((separationDir / float(amount))) * SeparationStrength;
     }
-    acceleration = acceleration + WallAvoidance(_Boids[id.x]) * WallAvoidanceStrength;
-    _Boids[id.x].acceleration.xyz = acceleration;
+    acceleration = acceleration + WallAvoidance(_Boids[id]) * WallAvoidanceStrength;
+    _Boids[id].acceleration.xyz = acceleration;
 }
