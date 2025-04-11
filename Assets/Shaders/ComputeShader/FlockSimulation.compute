@@ -1,4 +1,3 @@
-// Each #kernel tells which function to compile; you can have many kernels
 #pragma kernel FlockSimulation
 
 struct Boid
@@ -47,14 +46,6 @@ struct BoxHit
     bool hit;
 };
 
-AABB CretaeAABBFromBox(Obstacles obstacle)
-{
-    AABB aabb;
-    aabb.minVert = obstacle.worldPosition.xyz - obstacle.worldSize.xyz * 0.5f;
-    aabb.maxVert = obstacle.worldPosition.xyz + obstacle.worldSize.xyz * 0.5f;
-    return aabb;
-}
-
 BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
 {
     BoxHit boxHit;
@@ -65,29 +56,23 @@ BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
     const float3 avoidancePointWS = mul(boid.localToWorldMatrix, avoidancePoint).xyz;
 
     const float3 worldDir = normalize(avoidancePointWS - boid.worldPosition.xyz);
-    //TODO: Verify if with sending less rays to gpu it works the same
-    /*
-    if (acos(dot(worldDir, boid.forward.xyz)) >= radians(MaxAngle))
-    {
-        return boxHit;
-    }*/
     
-    float3 p = obstacle.worldPosition.xyz - boid.worldPosition.xyz;
+    const float3 p = obstacle.worldPosition.xyz - boid.worldPosition.xyz;
 
-    float x = dot(obstacle.rotation[0].xyz, p);
-    float y = dot(obstacle.rotation[1].xyz, p);
-    float z = dot(obstacle.rotation[2].xyz, p);
+    const float x = dot(obstacle.rotation[0].xyz, p);
+    const float y = dot(obstacle.rotation[1].xyz, p);
+    const float z = dot(obstacle.rotation[2].xyz, p);
     
-    float rdX = dot(obstacle.rotation[0].xyz, worldDir);
-    float rdY = dot(obstacle.rotation[1].xyz, worldDir);
-    float rdZ = dot(obstacle.rotation[2].xyz, worldDir);
+    const float rdX = dot(obstacle.rotation[0].xyz, worldDir);
+    const float rdY = dot(obstacle.rotation[1].xyz, worldDir);
+    const float rdZ = dot(obstacle.rotation[2].xyz, worldDir);
     
-    float3 size = obstacle.worldSize.xyz * 0.5f;
+    const float3 size = obstacle.worldSize.xyz * 0.5f;
     
-    float3 minOBB = float3(x - size.x, y - size.y, z - size.z);
-    float3 maxOBB = float3(x + size.x, y + size.y, z + size.z);
+    const float3 minOBB = float3(x - size.x, y - size.y, z - size.z);
+    const float3 maxOBB = float3(x + size.x, y + size.y, z + size.z);
     
-    float3 newDir = float3(rdX, rdY, rdZ);
+    const float3 newDir = float3(rdX, rdY, rdZ);
 
     const float3 pMin = minOBB / newDir;
     const float3 pMax = maxOBB / newDir;
@@ -198,7 +183,6 @@ void FlockSimulation(uint3 id : SV_DispatchThreadID)
         acceleration += normalize((cohesion / float(amount)) - _Boids[id.x].worldPosition.xyz) * CohesionStrength;
         acceleration += normalize((separationDir / float(amount))) * SeparationStrength;
     }
-    float3 wallAvoidnaceForce = WallAvoidance(_Boids[id.x]);
-    acceleration = acceleration + wallAvoidnaceForce * WallAvoidanceStrength;
+    acceleration = acceleration + WallAvoidance(_Boids[id.x]) * WallAvoidanceStrength;
     _Boids[id.x].acceleration.xyz = acceleration;
 }

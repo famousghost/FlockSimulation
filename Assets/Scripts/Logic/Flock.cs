@@ -267,16 +267,12 @@ namespace McFlockSystem
         private void FlockSimulationGPU()
         {
             PrepareBoidsBuffer();
-            _FlockSimulationComputeShader.SetInt(_BoidsAmountId, Boids.Count);
-            _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _BoidsBufferId, _BoidsBuffer);
             uint kernelX = 0u;
             _FlockSimulationComputeShader.GetKernelThreadGroupSizes(_FlockShaderKernelIndex, out kernelX, out _, out _);
             _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)kernelX, 1, 1);
             if (_CalculationTypes == CalculationTypes.GPU)
             {
-                _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
                 _BoidsBuffer.GetData(_BoidsReadBufferData);
-                _BoidsBuffer.Dispose();
 
                 UpdateBoidsGPU();
             }
@@ -290,7 +286,6 @@ namespace McFlockSystem
                             return;
                         }
                         request.GetData<BoidsStructureBuffer>().CopyTo(_BoidsReadBufferData);
-                        _BoidsBuffer.Dispose();
 
                         UpdateBoidsGPU();
                     }
@@ -317,11 +312,10 @@ namespace McFlockSystem
 
         private void PrepareBoidsBuffer()
         {
-            _BoidsBuffer = new ComputeBuffer(Boids.Count, Marshal.SizeOf<BoidsStructureBuffer>(), ComputeBufferType.Structured);
             if (_BoidsBufferList == null)
             {
                 _BoidsBufferList = new BoidsStructureBuffer[Boids.Count];
-                for(int i = 0; i < Boids.Count; ++i)
+                for (int i = 0; i < Boids.Count; ++i)
                 {
                     _BoidsBufferList[i] = new BoidsStructureBuffer();
                 }
@@ -405,13 +399,20 @@ namespace McFlockSystem
 
         private void InitializeBuffers()
         {
-            _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
+            if (Boids != null && Boids.Count != 0)
+            {
+                _BoidsReadBufferData = new BoidsStructureBuffer[Boids.Count];
+                _BoidsBuffer = new ComputeBuffer(Boids.Count, Marshal.SizeOf<BoidsStructureBuffer>(), ComputeBufferType.Structured, ComputeBufferMode.Immutable);
+                PrepareBoidsBuffer();
+                _FlockSimulationComputeShader.SetInt(_BoidsAmountId, Boids.Count);
+                _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _BoidsBufferId, _BoidsBuffer);
+            }
             PrepareAvoidancePointsBuffer();
             PrepareFlockDataBuffer();
             _FlockSimulationComputeShader.SetInt(_AvoidancePointsAmountId, _AvoidancePoints.Count);
             _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _AvoidancePointsBufferId, _AvoidancePointsBuffer);
             _FlockSimulationComputeShader.SetConstantBuffer(_FlockForcesConstantBufferId, _ForcesBuffer, 0, sizeof(float) * 6);
-            if(!PrepareObstaclesBuffer())
+            if (!PrepareObstaclesBuffer())
             {
                 return;
             }

@@ -991,7 +991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Prefab: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
   _SpawnArea: {fileID: 590028304}
-  _BoidsCount: 4096
+  _BoidsCount: 1024
 --- !u!114 &479182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1011,7 +1011,7 @@ MonoBehaviour:
   _CohesionStrength: 40
   _SeparationStrength: 30
   _AligmentStrength: 80
-  _WallAvoidanceStrength: 800
+  _WallAvoidanceStrength: 2000
   _FlockSimulationComputeShader: {fileID: 7200000, guid: f0f7f8cee349c8c4da0507621bee17d1, type: 3}
   _SpherePitchSize: 20
   _SphereYawSize: 20
