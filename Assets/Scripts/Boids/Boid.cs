@@ -27,7 +27,7 @@ namespace McFlockSystem
 
         public Vector3 Froward => _Transform.forward;
 
-        public Matrix4x4 LocalToWorldMatrix => _Transform.localToWorldMatrix;
+        public Transform Transform => _Transform;
 
         public Vector3 Acceleration => _Acceleration;
 

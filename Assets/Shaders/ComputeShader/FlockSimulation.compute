@@ -3,7 +3,6 @@
 struct Boid
 {
     float4 worldPosition; // pos x, y, z | radius w
-    float4 forward; // dir x, y, z | rayLenght w
     float4 velocity; // velocity x y z | debug
     float4 acceleration;
     float4x4 localToWorldMatrix;

@@ -8,16 +8,14 @@ namespace McFlockSystem
     public struct BoidsStructureBuffer
     {
   
-        public BoidsStructureBuffer(Vector4 worldPosition, Vector4 worldDirection, Vector4 veclocity, Vector4 acceleration, Matrix4x4 localToWorld)
+        public BoidsStructureBuffer(Vector4 worldPosition, Vector4 veclocity, Vector4 acceleration, Matrix4x4 localToWorld)
         {
             WorldPosition = worldPosition;
-            WorldDirection = worldDirection;
             Velocity = veclocity;
             Acceleration = acceleration;
             LocalToWorld = localToWorld;
         }
         public Vector4 WorldPosition;
-        public Vector4 WorldDirection;
         public Vector4 Velocity;
         public Vector4 Acceleration;
         public Matrix4x4 LocalToWorld;

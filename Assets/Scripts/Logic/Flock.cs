@@ -2,6 +2,7 @@ namespace McFlockSystem
 {
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
+    using Unity.VisualScripting;
     using UnityEngine;
     using UnityEngine.Rendering;
 
@@ -329,10 +330,9 @@ namespace McFlockSystem
         {
             var boid = Boids[index];
             _BoidsBufferList[index].WorldPosition.Set(boid.Position.x, boid.Position.y, boid.Position.z, boid.FlockRadius);
-            _BoidsBufferList[index].WorldDirection.Set(boid.Froward.x, boid.Froward.y, boid.Froward.z, 1.0f);
             _BoidsBufferList[index].Velocity.Set(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f);
             _BoidsBufferList[index].Acceleration.Set(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f);
-            _BoidsBufferList[index].LocalToWorld = boid.LocalToWorldMatrix;
+            _BoidsBufferList[index].LocalToWorld = boid.Transform.localToWorldMatrix;
         }
 
         private bool PrepareObstaclesBuffer()
