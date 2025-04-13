@@ -15,12 +15,6 @@ struct Obstacles
     float4x4 rotation;
 };
 
-struct AABB
-{
-    float3 minVert;
-    float3 maxVert;
-};
-
 RWStructuredBuffer<Boid> _Boids;
 StructuredBuffer<Obstacles> _Obstacles;
 StructuredBuffer<float4> _AvoidancePoints;
@@ -36,6 +30,7 @@ cbuffer FlockData
     float WallAvoidanceStrength;
     float MaxAngle;
     float MaxLength;
+    float FlockRadius;
 };
 
 struct BoxHit
@@ -45,7 +40,7 @@ struct BoxHit
     bool hit;
 };
 
-BoxHit BoxRaycast(Boid boid, float4 avoidancePoint, Obstacles obstacle)
+BoxHit BoxRaycast(const Boid boid, const float4 avoidancePoint, const Obstacles obstacle)
 {
     BoxHit boxHit;
     boxHit.hit = false;
@@ -134,7 +129,7 @@ float3 WallAvoidance(Boid boid)
 bool IsClosestBoid(const Boid currentBoid, const Boid otherBoid)
 {
     const float3 dir = currentBoid.worldPosition.xyz - otherBoid.worldPosition.xyz;
-    if (dot(dir, dir) > (currentBoid.worldPosition.a * currentBoid.worldPosition.a))
+    if (dot(dir, dir) > (FlockRadius * FlockRadius))
     {
         return false;
     }

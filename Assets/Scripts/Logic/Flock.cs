@@ -35,6 +35,7 @@ namespace McFlockSystem
         [SerializeField] private int _SphereYawSize;
         [SerializeField] private float _MaxAngle;
         [SerializeField] private float _MaxRayLength;
+        [SerializeField] private float _FlockRadius;
 
         [Header("Configuration")]
         [SerializeField] private CalculationTypes _CalculationTypes;
@@ -329,7 +330,7 @@ namespace McFlockSystem
         private void SetupBoidBuffer(int index)
         {
             var boid = Boids[index];
-            _BoidsBufferList[index].WorldPosition.Set(boid.Position.x, boid.Position.y, boid.Position.z, boid.FlockRadius);
+            _BoidsBufferList[index].WorldPosition.Set(boid.Position.x, boid.Position.y, boid.Position.z, 1.0f);
             _BoidsBufferList[index].Velocity.Set(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f);
             _BoidsBufferList[index].Acceleration.Set(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f);
             _BoidsBufferList[index].LocalToWorld = boid.Transform.localToWorldMatrix;
@@ -363,8 +364,8 @@ namespace McFlockSystem
 
         private void PrepareFlockDataBuffer()
         {
-            _ForcesBuffer = new ComputeBuffer(6, sizeof(float), ComputeBufferType.Constant);
-            float[] forceData = { _CohesionStrength, _SeparationStrength, _AligmentStrength, _WallAvoidanceStrength, _MaxAngle, _MaxRayLength};
+            _ForcesBuffer = new ComputeBuffer(7, sizeof(float), ComputeBufferType.Constant);
+            float[] forceData = { _CohesionStrength, _SeparationStrength, _AligmentStrength, _WallAvoidanceStrength, _MaxAngle, _MaxRayLength, _FlockRadius };
             _ForcesBuffer.SetData(forceData);
         }
 

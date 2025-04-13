@@ -1017,6 +1017,7 @@ MonoBehaviour:
   _SphereYawSize: 40
   _MaxAngle: 80
   _MaxRayLength: 15
+  _FlockRadius: 30
   _CalculationTypes: 2
   Boids: []
   Obstacles: []
