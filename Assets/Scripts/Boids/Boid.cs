@@ -23,6 +23,12 @@ namespace McFlockSystem
         #endregion Inspector Variables
 
         #region Public Variables
+        public Vector3 Position => _Transform.position;
+
+        public Vector3 Froward => _Transform.forward;
+
+        public Matrix4x4 LocalToWorldMatrix => _Transform.localToWorldMatrix;
+
         public Vector3 Acceleration => _Acceleration;
 
         public Vector3 Velocity => _Veclocity;
@@ -89,6 +95,7 @@ namespace McFlockSystem
 
         private void OnEnable()
         {
+            _Transform = transform;
             if (Flock.Instance != null)
             {
                 Flock.Instance.AddBois(this);
@@ -159,6 +166,7 @@ namespace McFlockSystem
 
         private Vector3 _Veclocity;
         private Vector3 _Acceleration;
+        private Transform _Transform;
         #endregion Private Variables
 
         #region Private Methods

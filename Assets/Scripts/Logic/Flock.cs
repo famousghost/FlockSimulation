@@ -109,6 +109,7 @@ namespace McFlockSystem
         private void Start()
         {
             _FlockShaderKernelIndex = _FlockSimulationComputeShader.FindKernel(_FlockShaderKernelName);
+            _FlockSimulationComputeShader.GetKernelThreadGroupSizes(_FlockShaderKernelIndex, out _KernelThreadSizeX, out _, out _);
             InitializeBuffers();
         }
 
@@ -196,6 +197,7 @@ namespace McFlockSystem
 
         private List<Vector4> _AvoidancePoints;
         private BoidsStructureBuffer[] _BoidsBufferList;
+        private uint _KernelThreadSizeX;
 
         private int _FlockShaderKernelIndex;
 
@@ -265,9 +267,7 @@ namespace McFlockSystem
         private void FlockSimulationGPU()
         {
             PrepareBoidsBuffer();
-            uint kernelX = 0u;
-            _FlockSimulationComputeShader.GetKernelThreadGroupSizes(_FlockShaderKernelIndex, out kernelX, out _, out _);
-            _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)kernelX, 1, 1);
+            _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)_KernelThreadSizeX, 1, 1);
             if (_CalculationTypes == CalculationTypes.GPU)
             {
                 _BoidsBuffer.GetData(_BoidsBufferList);
@@ -328,17 +328,11 @@ namespace McFlockSystem
         private void SetupBoidBuffer(int index)
         {
             var boid = Boids[index];
-            _BoidsBufferList[index].WorldPosition.Set(boid.transform.position.x, boid.transform.position.y, boid.transform.position.z, boid.FlockRadius);
-            _BoidsBufferList[index].WorldDirection.Set(boid.transform.forward.x, boid.transform.forward.y, boid.transform.forward.z, 1.0f);
+            _BoidsBufferList[index].WorldPosition.Set(boid.Position.x, boid.Position.y, boid.Position.z, boid.FlockRadius);
+            _BoidsBufferList[index].WorldDirection.Set(boid.Froward.x, boid.Froward.y, boid.Froward.z, 1.0f);
             _BoidsBufferList[index].Velocity.Set(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f);
             _BoidsBufferList[index].Acceleration.Set(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f);
-            _BoidsBufferList[index].LocalToWorld = boid.transform.localToWorldMatrix;
-            /*_BoidsBufferList[index] = new BoidsStructureBuffer(
-                                new Vector4(boid.transform.position.x, boid.transform.position.y, boid.transform.position.z, boid.FlockRadius),
-                                new Vector4(boid.transform.forward.x, boid.transform.forward.y, boid.transform.forward.z, 1.0f),
-                                new Vector4(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f),
-                                new Vector4(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f),
-                                boid.transform.localToWorldMatrix);*/
+            _BoidsBufferList[index].LocalToWorld = boid.LocalToWorldMatrix;
         }
 
         private bool PrepareObstaclesBuffer()
