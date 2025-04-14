@@ -11,6 +11,10 @@ namespace McFlockSystem
 
     public sealed class Obstacle : MonoBehaviour
     {
+        #region Inspector Variables
+        [SerializeField] private bool _UpdateEachFrame;
+        #endregion Inspector Variables
+
         #region Public Variables
         public ObstacleType Type;
         public Vector4 Position;
@@ -37,6 +41,10 @@ namespace McFlockSystem
 
         private void Update()
         {
+            if (!_UpdateEachFrame)
+            {
+                return;
+            }
             Position = transform.position;
             Size = new Vector4(transform.localScale.x, transform.localScale.y, transform.localScale.z, FlockArea ? 1.0f : 0.0f);
             Rotation.SetRow(0, transform.right);
