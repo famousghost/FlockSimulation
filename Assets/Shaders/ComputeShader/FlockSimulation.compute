@@ -3,6 +3,7 @@
 struct Boid
 {
     float4 worldPosition; // pos x, y, z | radius w
+    float4 size;
     float4 velocity; // velocity x y z | debug
     float4 acceleration;
     float4x4 localToWorldMatrix;
@@ -21,6 +22,7 @@ StructuredBuffer<float4> _AvoidancePoints;
 int _BoidsAmount;
 int _ObstacleAmount;
 int _AvoidancePointAmount;
+float _DeltaTime;
 
 cbuffer FlockData
 {
@@ -31,6 +33,7 @@ cbuffer FlockData
     float MaxAngle;
     float MaxLength;
     float FlockRadius;
+    float MaxVelocity;
 };
 
 struct BoxHit
@@ -152,13 +155,32 @@ float3 AlignmentRule(const Boid otherBoid)
 
 }
 
+float4x4 createModelMatrix(float3 forward, float3 up, float3 position, float3 scale)
+{
+    float3 dir = forward;
+    float3 right = normalize(cross(up, dir));
+    float3 newUp = normalize(cross(dir, right));
+    
+    float4x4 translateMatrix = float4x4(float4(scale.x, 0.0f, 0.0f, position.x),
+                                        float4(0.0f, scale.y, 0.0f, position.y),
+                                        float4(0.0f, 0.0f, scale.z, position.z),
+                                        float4(0.0f, 0.0f, 0.0f, 1.0f));
+    
+    return mul(translateMatrix, transpose(float4x4(float4(right.x, right.y, right.z, 0.0f),
+                    float4(newUp.x, newUp.y, newUp.z, 0.0f),
+                    float4(dir.x, dir.y, dir.z, 0.0f),
+                    float4(0.0f, 0.0f, 0.0f, 1.0f))));
+
+}
+
 [numthreads(8,1,1)]
 void FlockSimulation(uint id : SV_DispatchThreadID)
 {
     float3 cohesion = float3(0.0f, 0.0f, 0.0f);
     float3 separationDir = float3(0.0f, 0.0f, 0.0f);
     float3 alignment = float3(0.0f, 0.0f, 0.0f);
-    float3 acceleration = float3(0.0f, 0.0f, 0.0f);
+    float3 acceleration = _Boids[id].acceleration.xyz;
+    float3 velocity = _Boids[id].velocity.xyz;
     int amount = 0;
     for (int i = 0; i < _BoidsAmount; ++i)
     {
@@ -178,5 +200,14 @@ void FlockSimulation(uint id : SV_DispatchThreadID)
         acceleration += normalize((separationDir / float(amount))) * SeparationStrength;
     }
     acceleration = acceleration + WallAvoidance(_Boids[id]) * WallAvoidanceStrength;
+    velocity.xyz = velocity.xyz + acceleration * _DeltaTime * _DeltaTime;
+    float3 forward = normalize(velocity.xyz);
+    velocity.xyz = forward * MaxVelocity;
+    float3 worldPos = _Boids[id].worldPosition.xyz + velocity.xyz * _DeltaTime;
+    
     _Boids[id].acceleration.xyz = acceleration;
+    _Boids[id].velocity.xyz = velocity.xyz;
+    _Boids[id].worldPosition.xyz = worldPos;
+    _Boids[id].localToWorldMatrix = createModelMatrix(forward, float3(0.0f, 1.0f, 0.0f), worldPos, _Boids[id].size.xyz);
+    
 }

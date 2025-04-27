@@ -233,21 +233,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -18.599998, y: 7.3999996, z: -46.3, w: 0}
+  Size: {x: 28.9, y: 5.77, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: 1
     e01: 0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
+    e11: 1
     e12: 0
     e13: 0
     e20: 0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -364,21 +365,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: 14.299999, y: -30.40001, z: -23.100018, w: 0}
+  Size: {x: 28.9, y: 5.7699995, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: 1
     e01: 0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
+    e11: 1
     e12: 0
     e13: 0
     e20: 0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -495,21 +497,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -21.45, y: -3.400001, z: 40.4, w: 0}
+  Size: {x: 28.9, y: 5.769999, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: -0.00000023841858
     e01: 0
-    e02: 0
+    e02: 1.0000002
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000002
+    e11: -0.00000023841858
     e12: 0
     e13: 0
     e20: 0
-    e21: 0
-    e22: 0
+    e21: -1.0000002
+    e22: -0.00000023841858
     e23: 0
     e30: 0
     e31: 0
@@ -661,21 +664,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: 30.999996, y: -13.800001, z: -23.100018, w: 0}
+  Size: {x: 28.9, y: 5.7699986, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: -0.00000011920929
+    e01: 1.0000001
     e02: 0
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000001
+    e11: -0.00000011920929
     e12: 0
     e13: 0
-    e20: 0
+    e20: -0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -792,21 +796,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -34.3, y: 7.7999964, z: 59.100002, w: 0}
+  Size: {x: 28.9, y: 5.77, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: 1
+    e01: -0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
-    e12: 0
+    e11: -0.00000011920929
+    e12: 1.0000001
     e13: 0
     e20: 0
-    e21: 0
-    e22: 0
+    e21: -1.0000001
+    e22: -0.00000011920929
     e23: 0
     e30: 0
     e31: 0
@@ -923,21 +928,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -33.5, y: 7.8, z: 26.3, w: 0}
+  Size: {x: 28.9, y: 5.77, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: 1
+    e01: -0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
-    e12: 0
+    e11: -0.00000011920929
+    e12: 1.0000001
     e13: 0
     e20: 0
-    e21: 0
-    e22: 0
+    e21: -1.0000001
+    e22: -0.00000011920929
     e23: 0
     e30: 0
     e31: 0
@@ -991,7 +997,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Prefab: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
   _SpawnArea: {fileID: 590028304}
-  _BoidsCount: 4096
+  _BoidsCount: 16384
 --- !u!114 &479182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1018,6 +1024,8 @@ MonoBehaviour:
   _MaxAngle: 80
   _MaxRayLength: 15
   _FlockRadius: 30
+  _MaxVelocity: 12
+  _Initialized: 0
   _CalculationTypes: 2
   Boids: []
   Obstacles: []
@@ -1083,7 +1091,7 @@ Transform:
   m_GameObject: {fileID: 590028300}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -30, y: 0, z: 0}
-  m_LocalScale: {x: 120, y: 80, z: 120}
+  m_LocalScale: {x: 140, y: 100, z: 140}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1114,21 +1122,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -30, y: 0, z: 0, w: 0}
+  Size: {x: 140, y: 100, z: 140, w: 1}
   Rotation:
-    e00: 0
+    e00: 1
     e01: 0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
+    e11: 1
     e12: 0
     e13: 0
     e20: 0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -1339,21 +1348,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -26.8, y: -0.6999998, z: -46.3, w: 0}
+  Size: {x: 28.9, y: 5.769999, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: -0.00000011920929
+    e01: 1.0000001
     e02: 0
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000001
+    e11: -0.00000011920929
     e12: 0
     e13: 0
-    e20: 0
+    e20: -0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -1524,21 +1534,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -76.1, y: 2.3999996, z: -23.100018, w: 0}
+  Size: {x: 28.9, y: 5.7699995, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: 1
     e01: 0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
+    e11: 1
     e12: 0
     e13: 0
     e20: 0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -1739,21 +1750,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -30.199999, y: -3.400002, z: 48.5, w: 0}
+  Size: {x: 28.9, y: 5.77, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: 1
+    e01: -0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
-    e12: 0
+    e11: -0.00000011920929
+    e12: 1.0000001
     e13: 0
     e20: 0
-    e21: 0
-    e22: 0
+    e21: -1.0000001
+    e22: -0.00000011920929
     e23: 0
     e30: 0
     e31: 0
@@ -1870,21 +1882,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -2.8999977, y: -13.800001, z: -23.100018, w: 0}
+  Size: {x: 28.9, y: 5.7699986, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: -0.00000011920929
+    e01: 1.0000001
     e02: 0
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000001
+    e11: -0.00000011920929
     e12: 0
     e13: 0
-    e20: 0
+    e20: -0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -2036,21 +2049,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -18.199999, y: -9, z: -46.3, w: 0}
+  Size: {x: 28.9, y: 5.77, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: 1
     e01: 0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
+    e11: 1
     e12: 0
     e13: 0
     e20: 0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -2167,21 +2181,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -75.3, y: -30.40001, z: -23.100018, w: 0}
+  Size: {x: 28.9, y: 5.7699995, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: 1
     e01: 0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
+    e11: 1
     e12: 0
     e13: 0
     e20: 0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -2347,21 +2362,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -58.6, y: -13.800001, z: -23.100018, w: 0}
+  Size: {x: 28.9, y: 5.7699986, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: -0.00000011920929
+    e01: 1.0000001
     e02: 0
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000001
+    e11: -0.00000011920929
     e12: 0
     e13: 0
-    e20: 0
+    e20: -0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -2478,21 +2494,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
   Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Size: {x: 1, y: 1, z: 1, w: 0}
   Rotation:
-    e00: 0
+    e00: 1
     e01: 0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
+    e11: 1
     e12: 0
     e13: 0
     e20: 0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -2609,21 +2626,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -38.4, y: -3.400001, z: 40.4, w: 0}
+  Size: {x: 28.9, y: 5.769999, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: -0.00000023841858
     e01: 0
-    e02: 0
+    e02: 1.0000002
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000002
+    e11: -0.00000023841858
     e12: 0
     e13: 0
     e20: 0
-    e21: 0
-    e22: 0
+    e21: -1.0000002
+    e22: -0.00000023841858
     e23: 0
     e30: 0
     e31: 0
@@ -2740,21 +2758,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -92.5, y: -13.800001, z: -23.100018, w: 0}
+  Size: {x: 28.9, y: 5.7699986, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: -0.00000011920929
+    e01: 1.0000001
     e02: 0
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000001
+    e11: -0.00000011920929
     e12: 0
     e13: 0
-    e20: 0
+    e20: -0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -3075,21 +3094,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: 13.5, y: 2.3999996, z: -23.100018, w: 0}
+  Size: {x: 28.9, y: 5.7699995, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: 1
     e01: 0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
+    e11: 1
     e12: 0
     e13: 0
     e20: 0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0
@@ -3206,21 +3226,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -38.3, y: -13.1, z: -1.1, w: 0}
+  Size: {x: 20, y: 50, z: 50, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
-    e02: 0
+    e00: 0.8898542
+    e01: 0.45156926
+    e02: -0.06515174
     e03: 0
-    e10: 0
-    e11: 0
-    e12: 0
+    e10: -0.35476524
+    e11: 0.7746292
+    e12: 0.5235373
     e13: 0
-    e20: 0
-    e21: 0
-    e22: 0
+    e20: 0.28688177
+    e21: -0.4427583
+    e22: 0.84950805
     e23: 0
     e30: 0
     e31: 0
@@ -3337,21 +3358,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -16.800001, y: 7.7999983, z: 42.9, w: 0}
+  Size: {x: 28.9, y: 5.769999, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: -0.00000023841858
     e01: 0
-    e02: 0
+    e02: 1.0000002
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000002
+    e11: -0.00000023841858
     e12: 0
     e13: 0
     e20: 0
-    e21: 0
-    e22: 0
+    e21: -1.0000002
+    e22: -0.00000023841858
     e23: 0
     e30: 0
     e31: 0
@@ -3468,21 +3490,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -50.7, y: 7.7999983, z: 42.9, w: 0}
+  Size: {x: 28.9, y: 5.769999, z: 4.1, w: 0}
   Rotation:
-    e00: 0
+    e00: -0.00000023841858
     e01: 0
-    e02: 0
+    e02: 1.0000002
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000002
+    e11: -0.00000023841858
     e12: 0
     e13: 0
     e20: 0
-    e21: 0
-    e22: 0
+    e21: -1.0000002
+    e22: -0.00000023841858
     e23: 0
     e30: 0
     e31: 0
@@ -3599,21 +3622,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -29.8, y: -3.4, z: 32.1, w: 0}
+  Size: {x: 28.9, y: 5.77, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: 1
+    e01: -0
     e02: 0
     e03: 0
     e10: 0
-    e11: 0
-    e12: 0
+    e11: -0.00000011920929
+    e12: 1.0000001
     e13: 0
     e20: 0
-    e21: 0
-    e22: 0
+    e21: -1.0000001
+    e22: -0.00000011920929
     e23: 0
     e30: 0
     e31: 0
@@ -3730,21 +3754,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ff42a49e849b14f9ebe5632850d47a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _UpdateEachFrame: 0
   Type: 1
-  Position: {x: 0, y: 0, z: 0, w: 0}
-  Size: {x: 0, y: 0, z: 0, w: 0}
+  Position: {x: -9.849999, y: -0.6999998, z: -46.3, w: 0}
+  Size: {x: 28.9, y: 5.769999, z: 4.1, w: 0}
   Rotation:
-    e00: 0
-    e01: 0
+    e00: -0.00000011920929
+    e01: 1.0000001
     e02: 0
     e03: 0
-    e10: 0
-    e11: 0
+    e10: -1.0000001
+    e11: -0.00000011920929
     e12: 0
     e13: 0
-    e20: 0
+    e20: -0
     e21: 0
-    e22: 0
+    e22: 1
     e23: 0
     e30: 0
     e31: 0

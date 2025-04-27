@@ -23,7 +23,10 @@ namespace McFlockSystem
         #endregion Inspector Variables
 
         #region Public Variables
+
         public Vector3 Position => _Transform.position;
+
+        public Vector3 Size => _Transform.localScale;
 
         public Vector3 Froward => _Transform.forward;
 
@@ -47,6 +50,12 @@ namespace McFlockSystem
             transform.forward = _Veclocity.normalized;
         }
 
+        public void UpdateBoidGPU(Vector3 position, Vector3 forward)
+        {
+            transform.position = position;
+            transform.forward = forward;
+        }
+
         public void AvoidWalls(FlockArea flockArea, float force)
         {
             _HitPoints.Clear();
@@ -56,6 +65,11 @@ namespace McFlockSystem
         public void UpdateAccelaration(Vector3 accelaration)
         {
             _Acceleration += accelaration;
+        }
+
+        public void SetupAcceleration(Vector3 acceleration)
+        {
+            _Acceleration = acceleration;
         }
 
         public bool IsClosestBoid(Boid boid)

@@ -2,7 +2,6 @@ namespace McFlockSystem
 {
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
-    using Unity.VisualScripting;
     using UnityEngine;
     using UnityEngine.Rendering;
 
@@ -36,6 +35,8 @@ namespace McFlockSystem
         [SerializeField] private float _MaxAngle;
         [SerializeField] private float _MaxRayLength;
         [SerializeField] private float _FlockRadius;
+        [SerializeField] private float _MaxVelocity;
+        [SerializeField] private bool _Initialized;
 
         [Header("Configuration")]
         [SerializeField] private CalculationTypes _CalculationTypes;
@@ -210,6 +211,7 @@ namespace McFlockSystem
         private readonly int _BoidsAmountId = Shader.PropertyToID("_BoidsAmount");
         private readonly int _ObstacleAmountId = Shader.PropertyToID("_ObstacleAmount");
         private readonly int _AvoidancePointsAmountId = Shader.PropertyToID("_AvoidancePointAmount");
+        private readonly int _DeltaTimeId = Shader.PropertyToID("_DeltaTime");
 
         private readonly string _FlockShaderKernelName = "FlockSimulation";
         #endregion Private Variables
@@ -269,6 +271,7 @@ namespace McFlockSystem
         private void FlockSimulationGPU()
         {
             PrepareBoidsBuffer();
+            _FlockSimulationComputeShader.SetFloat(_DeltaTimeId, Time.deltaTime);
             _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)_KernelThreadSizeX, 1, 1);
             if (_CalculationTypes == CalculationTypes.GPU)
             {
@@ -304,14 +307,21 @@ namespace McFlockSystem
                     continue;
                 }
                 var acceleration = _BoidsBufferList[i].Acceleration;
-                boid.UpdateAccelaration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
-                boid.UpdateBoid();
+                Vector3 position = _BoidsBufferList[i].WorldPosition;
+                Vector3 forward = _BoidsBufferList[i].Velocity.normalized;
+                //boid.SetupAcceleration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
+                boid.UpdateBoidGPU(position, forward);
                 ++i;
             }
         }
 
         private void PrepareBoidsBuffer()
         {
+            if(_Initialized)
+            {
+                return;
+            }
+            _Initialized = true;
             if (_BoidsBufferList == null)
             {
                 _BoidsBufferList = new BoidsStructureBuffer[Boids.Count];
@@ -320,7 +330,7 @@ namespace McFlockSystem
                     _BoidsBufferList[i] = new BoidsStructureBuffer();
                 }
             }
-            for(int i = 0; i < Boids.Count; ++i)
+            for (int i = 0; i < Boids.Count; ++i)
             {
                 SetupBoidBuffer(i);
             }
@@ -331,6 +341,7 @@ namespace McFlockSystem
         {
             var boid = Boids[index];
             _BoidsBufferList[index].WorldPosition.Set(boid.Position.x, boid.Position.y, boid.Position.z, 1.0f);
+            _BoidsBufferList[index].Size.Set(boid.Size.x, boid.Size.y, boid.Size.z, 1.0f);
             _BoidsBufferList[index].Velocity.Set(boid.Velocity.x, boid.Velocity.y, boid.Velocity.z, 1.0f);
             _BoidsBufferList[index].Acceleration.Set(boid.Acceleration.x, boid.Acceleration.y, boid.Acceleration.z, 1.0f);
             _BoidsBufferList[index].LocalToWorld = boid.Transform.localToWorldMatrix;
@@ -364,8 +375,8 @@ namespace McFlockSystem
 
         private void PrepareFlockDataBuffer()
         {
-            _ForcesBuffer = new ComputeBuffer(7, sizeof(float), ComputeBufferType.Constant);
-            float[] forceData = { _CohesionStrength, _SeparationStrength, _AligmentStrength, _WallAvoidanceStrength, _MaxAngle, _MaxRayLength, _FlockRadius };
+            _ForcesBuffer = new ComputeBuffer(8, sizeof(float), ComputeBufferType.Constant);
+            float[] forceData = { _CohesionStrength, _SeparationStrength, _AligmentStrength, _WallAvoidanceStrength, _MaxAngle, _MaxRayLength, _FlockRadius, _MaxVelocity};
             _ForcesBuffer.SetData(forceData);
         }
 
@@ -395,7 +406,6 @@ namespace McFlockSystem
             if (Boids != null && Boids.Count != 0)
             {
                 _BoidsBuffer = new ComputeBuffer(Boids.Count, Marshal.SizeOf<BoidsStructureBuffer>(), ComputeBufferType.Structured, ComputeBufferMode.Immutable);
-                PrepareBoidsBuffer();
                 _FlockSimulationComputeShader.SetInt(_BoidsAmountId, Boids.Count);
                 _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _BoidsBufferId, _BoidsBuffer);
             }
