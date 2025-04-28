@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'UNITY_INSTANCE_ID' with 'UNITY_VERTEX_INPUT_INSTANCE_ID'
+
 Shader "FlockSimulation/PhysicallyBasedRendering"
 {
     Properties
@@ -51,6 +53,7 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
                 float3 normal : TEXCOORD2;
                 float3 tangent : TEXCOORD3;
                 float3 bitangent : TEXCOORD4;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
             };
             
             //Necessary Textures
@@ -131,8 +134,9 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
 
             v2f vert (appdata v)
             {
-                UNITY_SETUP_INSTANCE_ID(v);
                 v2f o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID (v, o);
                 float4 vertex = float4(0.0f, 0.0f, 0.0f, 1.0f);
                 #ifdef UNITY_INSTANCING_ENABLED
                 int id = UNITY_ACCESS_INSTANCED_PROP(Props, _Index);
@@ -215,6 +219,7 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
 
             float4 frag (v2f i) : SV_Target
             {
+                UNITY_SETUP_INSTANCE_ID(i);
                 float4 col = tex2D(_BaseColor, TRANSFORM_TEX(i.uv, _BaseColor));
                 float atteunation = unity_4LightAtten0.y;
 
