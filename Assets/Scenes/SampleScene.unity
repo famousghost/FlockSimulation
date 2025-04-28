@@ -995,9 +995,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64bfb3ffee46af546b6f1abeef66dd04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Prefab: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
+  _CalculateTypes: 2
+  _Prefab_CPU_GPU_SYNC: {fileID: 2031495120979427109, guid: c0243e81874baa0458c49aa5e14373d8, type: 3}
+  _Prefab_FULL_GPU: {fileID: 2031495120979427109, guid: 4551f675007b78243ac856d5cda26971, type: 3}
   _SpawnArea: {fileID: 590028304}
-  _BoidsCount: 16384
+  _BoidsCount: 8192
+  SharedMaterial: {fileID: 0}
 --- !u!114 &479182331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1026,8 +1029,6 @@ MonoBehaviour:
   _FlockRadius: 30
   _MaxVelocity: 12
   _Initialized: 0
-  _BoidMaterial: {fileID: 2100000, guid: 9760b69fb6a272248baf29cd89a2ffea, type: 2}
-  _CalculationTypes: 2
   Boids: []
   Obstacles: []
 --- !u!1 &579381952

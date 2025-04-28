@@ -1,6 +1,7 @@
 namespace McFlockSystem
 {
     using System.Collections.Generic;
+    using System.Runtime.CompilerServices;
     using UnityEngine;
 
     public sealed class Boid : MonoBehaviour
@@ -42,6 +43,7 @@ namespace McFlockSystem
         #endregion Public Variables
 
         #region Public Methods
+
         public void UpdateBoid()
         {
             _Veclocity += _Acceleration * Time.deltaTime * Time.deltaTime;
