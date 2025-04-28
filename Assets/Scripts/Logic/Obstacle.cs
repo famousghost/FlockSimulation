@@ -51,22 +51,25 @@ namespace McFlockSystem
             Rotation.SetRow(1, transform.up);
             Rotation.SetRow(2, transform.forward);
         }
+
+        private void Start()
+        {
+            AddToObstacles();
+        }
+
         private void OnEnable()
         {
-            if(Flock.Instance == null)
-            {
-                return;
-            }
-            Flock.Instance.AddObstacle(this);
+            AddToObstacles();
         }
 
         private void OnDisable()
         {
-            if(Flock.Instance == null)
-            {
-                return;
-            }
-            Flock.Instance.RemoveObstacle(this);
+            RemoveFromObstacles();
+        }
+
+        private void OnDestroy()
+        {
+            RemoveFromObstacles();
         }
         #endregion Unity Methods
 
@@ -75,7 +78,23 @@ namespace McFlockSystem
         #endregion Private Variables
 
         #region Private Methods
-
+        private void AddToObstacles()
+        {
+            if (Flock.Instance == null)
+            {
+                return;
+            }
+            Flock.Instance.AddObstacle(this);
+        }
+        
+        private void RemoveFromObstacles()
+        {
+            if (Flock.Instance == null)
+            {
+                return;
+            }
+            Flock.Instance.RemoveObstacle(this);
+        }
         #endregion Privtae Methods
     }
 }//McFlockSystem

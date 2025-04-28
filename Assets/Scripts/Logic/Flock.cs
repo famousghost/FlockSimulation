@@ -105,7 +105,10 @@ namespace McFlockSystem
         #region Unity Methods
         private void Awake()
         {
+            Debug.Log("Initialize flock");
             Instance = this;
+            Boids = new List<Boid>();
+            Obstacles = new List<Obstacle>();
         }
 
         private void Start()
