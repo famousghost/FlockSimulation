@@ -38,10 +38,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metalic: 0.454
+    - _Metalic: 0.14
     - _NormalStrength: 8
     - _Reflectance: 1
-    - _Roughness: 0.556
+    - _Roughness: 0.479
     m_Colors:
-    - _Emission: {r: 0, g: 0, b: 0, a: 0}
+    - _Color: {r: 0.9811321, g: 0.28138122, b: 0.28138122, a: 1}
+    - _Emission: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 0}
   m_BuildTextureStacks: []

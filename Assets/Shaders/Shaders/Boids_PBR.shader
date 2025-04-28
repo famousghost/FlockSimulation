@@ -4,6 +4,7 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
 {
     Properties
     {
+        _Color("Object Color", Color) = (1, 1, 1, 1)
         _BaseColor ("Base Color", 2D) = "white" {}
         _RoughnessMap ("Roughness Map", 2D) = "white" {}
         _Roughness("Roughness strength", Range(0.0, 1.0)) = 0.1
@@ -27,7 +28,6 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
             #pragma vertex vert
             #pragma fragment frag
 
-            #pragma multi_compile _ PROCEDURAL_INSTANCING_ON
             #pragma multi_compile_instancing 
             #pragma target 5.0
 
@@ -57,6 +57,7 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
             };
             
             //Necessary Textures
+            float4 _Color;
             sampler2D _BaseColor;
             float4 _BaseColor_ST;
             sampler2D _NormalMap;
@@ -140,17 +141,22 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
                 float4 vertex = float4(0.0f, 0.0f, 0.0f, 1.0f);
                 #ifdef UNITY_INSTANCING_ENABLED
                 int id = UNITY_ACCESS_INSTANCED_PROP(Props, _Index);
-                vertex = mul(_Boids[id].localToWorldMatrix, v.vertex);
-                float4x4 worldToLocalMatrix = inverse(_Boids[id].localToWorldMatrix);
+                float4x4 scaleMatrix = float4x4(unity_ObjectToWorld[0][0], 0.0f, 0.0f, 0.0f,
+                                                0.0f, unity_ObjectToWorld[1][1], 0.0f, 0.0f,
+                                                0.0f, 0.0f, unity_ObjectToWorld[2][2], 0.0f,
+                                                0.0f, 0.0f, 0.0f, 1.0f);
+                const float4x4 localToWorldMatrix = mul(scaleMatrix, _Boids[id].localToWorldMatrix);
+                vertex = mul(localToWorldMatrix, v.vertex);
+                float4x4 worldToLocalMatrix = inverse(transpose(localToWorldMatrix));
                 o.vertex = mul(UNITY_MATRIX_VP, vertex);
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+                o.worldPos = vertex;
                 o.normal = normalize(mul(v.normal, worldToLocalMatrix));
                 o.tangent = normalize(mul(v.tangent, worldToLocalMatrix));
                 o.bitangent = normalize(mul(cross(v.normal, v.tangent.xyz) ,worldToLocalMatrix));
                 #else
-                vertex = mul(UNITY_MATRIX_M, v.vertex);
+                vertex = mul(unity_ObjectToWorld, v.vertex);
                 o.vertex = mul(UNITY_MATRIX_VP, vertex);
-                o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+                o.worldPos = vertex;
                 o.normal = normalize(mul(v.normal, unity_WorldToObject));
                 o.tangent = normalize(mul(v.tangent, unity_WorldToObject));
                 o.bitangent = normalize(mul(cross(v.normal, v.tangent.xyz) , unity_WorldToObject));
@@ -190,7 +196,7 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
             }
 
             float3 BRDF_Microfacet(float3 rd, float3 lightDir, float3 normal,
-                                   float metalic, float roughness, float reflectance, float3 baseColor, float3 skyboxColor)
+                                   float metalic, float roughness, float reflectance, float3 baseColor, float3 skyboxColor, float4 color)
             {
                 float3 H = normalize(lightDir + rd);
                 float vDotN = max(0.0f, dot(normal, rd));
@@ -211,16 +217,16 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
 
                 col *= (1.0f - metalic);
     
-                float3 diffuse = col / UNITY_PI;
+                float3 diffuse = col;
     
-                return diffuse + specular;
+                return diffuse * color + specular;
             }
 
 
             float4 frag (v2f i) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(i);
-                float4 col = tex2D(_BaseColor, TRANSFORM_TEX(i.uv, _BaseColor));
+                float4 col = tex2D(_BaseColor, TRANSFORM_TEX(i.uv, _BaseColor)) * _Color;
                 float atteunation = unity_4LightAtten0.y;
 
                 float3 lightDir = _WorldSpaceLightPos0.a == 0.0f ? normalize(_WorldSpaceLightPos0.xyz ) : normalize(_WorldSpaceLightPos0.xyz - i.worldPos.xyz);
@@ -240,13 +246,82 @@ Shader "FlockSimulation/PhysicallyBasedRendering"
                 float3 skyColor = DecodeHDR (skyData, unity_SpecCube0_HDR);
                 float3 normal = i.normal;
                 float nDotL = max(0.0f, dot(normal, lightDir));
-                float3 finalColor = _Emission +  BRDF_Microfacet(camDir, lightDir, normal, _Metalic * metalic, _Roughness * roughness, _Reflectance, col.rgb, skyColor) * nDotL;
+                float3 finalColor = _Emission +  BRDF_Microfacet(camDir, lightDir, normal, _Metalic * metalic, _Roughness * roughness, _Reflectance, col.rgb, skyColor, _Color) * nDotL;
                 col.rgb = finalColor;
                 col.a = 1.0f;
                 return col;
             }
             ENDCG
         }
+           Pass
+    {
+        Tags {"LightMode" = "ShadowCaster"}
+        CGPROGRAM
+        #pragma vertex vert
+        #pragma fragment frag
+        #pragma multi_compile_instancing
+        #include "AutoLight.cginc"
+
+        #include "UnityCG.cginc"
+
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+            
+
+
+            struct Boid
+            {
+                float4 worldPosition; // pos x, y, z | radius w
+                float4 size;
+                float4 velocity; // velocity x y z | debug
+                float4 acceleration;
+                float4x4 localToWorldMatrix;
+            };
+
+            // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
+            // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
+            // #pragma instancing_options assumeuniformscaling
+            UNITY_INSTANCING_BUFFER_START(Props)
+            UNITY_DEFINE_INSTANCED_PROP(int, _Index)
+            UNITY_INSTANCING_BUFFER_END(Props)
+
+            StructuredBuffer<Boid> _Boids;
+
+            v2f vert (appdata v)
+            {
+                v2f o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_TRANSFER_INSTANCE_ID (v, o);
+                float4 vertex = float4(0.0f, 0.0f, 0.0f, 1.0f);
+                #ifdef UNITY_INSTANCING_ENABLED
+                int id = UNITY_ACCESS_INSTANCED_PROP(Props, _Index);
+                const float4x4 localToWorldMatrix = _Boids[id].localToWorldMatrix;
+                vertex = mul(localToWorldMatrix, v.vertex);
+                o.vertex = mul(UNITY_MATRIX_VP, vertex);
+                #else
+                vertex = mul(unity_ObjectToWorld, v.vertex);
+                o.vertex = mul(UNITY_MATRIX_VP, vertex);
+                #endif
+                return o;
+            }
+
+
+        float4 frag(v2f i) : SV_Target
+        {
+            UNITY_SETUP_INSTANCE_ID(i);
+            return float4(0.0f, 0.0f, 0.0f, 1.0f);
+        }
+    ENDCG
+    }
     }
     FallBack "Diffuse"
 }
