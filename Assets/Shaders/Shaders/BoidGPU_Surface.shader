@@ -55,7 +55,8 @@ Shader "FlockSimulation/BoidGPU_Surface"
                 float4 vertex = float4(0.0f, 0.0f, 0.0f, 1.0f);
                 #ifdef UNITY_INSTANCING_ENABLED
                 int id = UNITY_ACCESS_INSTANCED_PROP(Props, _Index);
-                vertex = mul(_Boids[UNITY_ACCESS_INSTANCED_PROP(Props, _Index)].localToWorldMatrix, v.vertex);
+                vertex = mul(_Boids[id].localToWorldMatrix, v.vertex);
+               // unity_ObjectToWorld = _Boids[id].localToWorldMatrix;
                 #endif
                 v.vertex = vertex;
             }
