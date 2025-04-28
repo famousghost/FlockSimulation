@@ -1026,6 +1026,7 @@ MonoBehaviour:
   _FlockRadius: 30
   _MaxVelocity: 12
   _Initialized: 0
+  _BoidMaterial: {fileID: 2100000, guid: 9760b69fb6a272248baf29cd89a2ffea, type: 2}
   _CalculationTypes: 2
   Boids: []
   Obstacles: []

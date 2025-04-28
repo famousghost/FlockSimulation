@@ -9,7 +9,8 @@ namespace McFlockSystem
     {
         CPU = 0,
         GPU = 1,
-        GPU_ASYNC = 2
+        GPU_ASYNC = 2,
+        FULL_GPU = 3
     }
 
     public sealed class Flock : MonoBehaviour
@@ -37,6 +38,8 @@ namespace McFlockSystem
         [SerializeField] private float _FlockRadius;
         [SerializeField] private float _MaxVelocity;
         [SerializeField] private bool _Initialized;
+        [Header("Full GPU")]
+        [SerializeField] private Material _BoidMaterial;
 
         [Header("Configuration")]
         [SerializeField] private CalculationTypes _CalculationTypes;
@@ -273,6 +276,10 @@ namespace McFlockSystem
             PrepareBoidsBuffer();
             _FlockSimulationComputeShader.SetFloat(_DeltaTimeId, Time.deltaTime);
             _FlockSimulationComputeShader.Dispatch(_FlockShaderKernelIndex, Boids.Count / (int)_KernelThreadSizeX, 1, 1);
+            if(_CalculationTypes == CalculationTypes.FULL_GPU)
+            {
+                return;
+            }
             if (_CalculationTypes == CalculationTypes.GPU)
             {
                 _BoidsBuffer.GetData(_BoidsBufferList);
@@ -309,7 +316,6 @@ namespace McFlockSystem
                 var acceleration = _BoidsBufferList[i].Acceleration;
                 Vector3 position = _BoidsBufferList[i].WorldPosition;
                 Vector3 forward = _BoidsBufferList[i].Velocity.normalized;
-                //boid.SetupAcceleration(new Vector3(acceleration.x, acceleration.y, acceleration.z));
                 boid.UpdateBoidGPU(position, forward);
                 ++i;
             }
@@ -408,6 +414,7 @@ namespace McFlockSystem
                 _BoidsBuffer = new ComputeBuffer(Boids.Count, Marshal.SizeOf<BoidsStructureBuffer>(), ComputeBufferType.Structured, ComputeBufferMode.Immutable);
                 _FlockSimulationComputeShader.SetInt(_BoidsAmountId, Boids.Count);
                 _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _BoidsBufferId, _BoidsBuffer);
+                _BoidMaterial.SetBuffer(_BoidsBufferId, _BoidsBuffer);
             }
             PrepareAvoidancePointsBuffer();
             PrepareFlockDataBuffer();
