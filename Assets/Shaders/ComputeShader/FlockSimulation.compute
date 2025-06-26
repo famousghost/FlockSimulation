@@ -115,11 +115,18 @@ BoxHit BoxRaycast(const Boid boid, const float4 avoidancePoint, const Obstacles 
 float3 WallAvoidance(Boid boid)
 {
     float3 force = float3(0.0f, 0.0f, 0.0f);
-    for (int i = 0; i < _AvoidancePointAmount; ++i)
+    for (int i = 0; i < _ObstacleAmount; ++i)
     {
-        for (int j = 0; j < _ObstacleAmount; ++j)
+        const Obstacles obstacle = _Obstacles[i];
+        const float3 dir = boid.worldPosition.xyz - obstacle.worldPosition.xyz;
+        const float size = MaxLength * MaxLength * FlockRadius;
+        if (dot(dir, dir) > size && obstacle.worldSize.a == 0.0f)
         {
-            BoxHit boxHit = BoxRaycast(boid, _AvoidancePoints[i], _Obstacles[j]);
+            continue;
+        }
+        for (int j = 0; j < _AvoidancePointAmount; ++j)
+        {
+            BoxHit boxHit = BoxRaycast(boid, _AvoidancePoints[j], obstacle);
             if (boxHit.hit)
             {
                 force = force + normalize(boid.worldPosition.xyz - boxHit.hitPoint.xyz) / (boxHit.depth * boxHit.depth + 1.0f);
