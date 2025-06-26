@@ -120,7 +120,15 @@ namespace McFlockSystem
         private void OnValidate()
         {
             _CalculationTypes = GetComponent<SpawnFlock>().CalculationTypes;
-            InitializeBuffers();
+            PrepareAvoidancePointsBuffer();
+            PrepareFlockDataBuffer();
+            _FlockSimulationComputeShader.SetInt(_AvoidancePointsAmountId, _AvoidancePoints.Count);
+            _FlockSimulationComputeShader.SetBuffer(_FlockShaderKernelIndex, _AvoidancePointsBufferId, _AvoidancePointsBuffer);
+            _FlockSimulationComputeShader.SetConstantBuffer(_FlockForcesConstantBufferId, _ForcesBuffer, 0, sizeof(float) * 6);
+            if (!PrepareObstaclesBuffer())
+            {
+                return;
+            }
         }
 
         private void Update()
